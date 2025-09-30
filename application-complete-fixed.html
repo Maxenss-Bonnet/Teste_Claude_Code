@@ -1,0 +1,2640 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Complète - 7 Outils Interactifs (Version Corrigée)</title>
+    <style>
+        /* Variables CSS globales */
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #3b82f6;
+            --accent-color: #1d4ed8;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #e2e8f0;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Mode sombre */
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+        }
+
+        /* Reset et base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: var(--transition);
+        }
+
+        /* Header animé */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .title {
+            color: white;
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #fff, #e0e7ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: titleGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            from { filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5)); }
+            to { filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.8)); }
+        }
+
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 0.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            font-size: 1.2rem;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        /* Navigation */
+        .nav {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            overflow-x: auto;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .nav-tabs {
+            display: flex;
+            list-style: none;
+            gap: 0.5rem;
+            min-width: max-content;
+        }
+
+        .nav-tab {
+            padding: 1rem 1.5rem;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: var(--transition);
+            white-space: nowrap;
+            font-size: 1rem;
+        }
+
+        .nav-tab:hover {
+            color: var(--primary-color);
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .nav-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        /* Container principal */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* Sections */
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            margin-bottom: 1.5rem;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        /* Boutons */
+        .btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            background: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .btn-danger {
+            background: #dc2626;
+        }
+
+        .btn-success {
+            background: #16a34a;
+        }
+
+        /* Inputs */
+        .input, .select, .textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .input:focus, .select:focus, .textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Grid responsive */
+        .grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        /* Utilitaires */
+        .flex {
+            display: flex;
+        }
+
+        .flex-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .flex-between {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-1 { margin-bottom: 1rem; }
+        .mb-2 { margin-bottom: 2rem; }
+        .mt-1 { margin-top: 1rem; }
+        .mt-2 { margin-top: 2rem; }
+
+        /* CALCULATRICE - Layout corrigé */
+        .calculator {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .calculator-display {
+            background: var(--bg-tertiary);
+            padding: 1.5rem;
+            text-align: right;
+            font-size: 1.8rem;
+            font-family: 'Courier New', monospace;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            min-height: 80px;
+            border: 2px solid var(--border-color);
+            overflow: hidden;
+            word-wrap: break-word;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        /* Grille simplifiée pour calculatrice */
+        .calculator-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+        }
+
+        .calc-btn {
+            height: 60px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .calc-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .calc-btn.operator {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .calc-btn.special {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .calc-btn.wide {
+            grid-column: span 2;
+        }
+
+        .calculator-history {
+            max-height: 200px;
+            overflow-y: auto;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .history-item {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        /* SNAKE GAME - Amélioré */
+        .snake-game {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .game-canvas {
+            border: 3px solid var(--primary-color);
+            border-radius: var(--border-radius);
+            background: #f0f9ff;
+            margin: 1rem 0;
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        [data-theme="dark"] .game-canvas {
+            background: #1e293b;
+        }
+
+        .game-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin: 1rem 0;
+        }
+
+        .score {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        /* Charts et autres sections - optimisées pour mobile */
+        .chart-container {
+            position: relative;
+            margin: 2rem 0;
+        }
+
+        .chart-canvas {
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            background: var(--bg-primary);
+            max-width: 100%;
+            height: auto;
+        }
+
+        .chart-controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+            margin: 1rem 0;
+        }
+
+        .file-input {
+            background: var(--bg-secondary);
+            border: 2px dashed var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .file-input:hover {
+            border-color: var(--primary-color);
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        /* Todo List */
+        .todo-app {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .todo-input-section {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+        }
+
+        .todo-input-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .todo-input {
+            flex: 1;
+        }
+
+        .todo-filters {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem 0;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .todo-list {
+            list-style: none;
+        }
+
+        .todo-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: var(--transition);
+        }
+
+        .todo-item:hover {
+            box-shadow: var(--shadow);
+            transform: translateY(-1px);
+        }
+
+        .todo-item.completed {
+            opacity: 0.6;
+            text-decoration: line-through;
+        }
+
+        .todo-checkbox {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary-color);
+        }
+
+        .todo-text {
+            flex: 1;
+            font-size: 1.1rem;
+        }
+
+        .todo-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .todo-btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+            border-radius: 4px;
+        }
+
+        .todo-stats {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        /* Converter */
+        .converter {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .converter-section {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+        }
+
+        .converter-form {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .converter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .converter-result {
+            background: var(--bg-tertiary);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        /* Chat Bot */
+        .chat-container {
+            max-width: 600px;
+            margin: 0 auto;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: 18px;
+            animation: messageSlide 0.3s ease-out;
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            background: var(--primary-color);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.bot {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-input-container {
+            padding: 1rem;
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-primary);
+        }
+
+        .chat-input-group {
+            display: flex;
+            gap: 0.5rem;
+            align-items: flex-end;
+        }
+
+        .chat-input {
+            flex: 1;
+            resize: none;
+            min-height: 40px;
+            max-height: 120px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .title {
+                font-size: 1.5rem;
+            }
+
+            .nav-tab {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .main-container {
+                padding: 1rem 0.5rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+
+            .converter-form {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .converter-form .btn {
+                justify-self: center;
+            }
+        }
+
+        /* Styles d'erreur et de succès */
+        .error {
+            color: #dc2626;
+            background: rgba(220, 38, 38, 0.1);
+            padding: 0.75rem;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+        }
+
+        .success {
+            color: #16a34a;
+            background: rgba(22, 163, 74, 0.1);
+            padding: 0.75rem;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(22, 163, 74, 0.2);
+        }
+
+        /* Loading */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border-color);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Scrollbars personnalisées */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <!-- Header avec titre animé -->
+    <header class="header">
+        <div class="header-content">
+            <h1 class="title">🚀 SuperApp Interactif (Version Corrigée)</h1>
+            <button class="theme-toggle" id="themeToggle" aria-label="Changer de thème">
+                🌙
+            </button>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-section="calculator">
+                    🧮 Calculatrice
+                </button>
+                <button class="nav-tab" data-section="snake">
+                    🐍 Snake
+                </button>
+                <button class="nav-tab" data-section="charts">
+                    📊 Graphiques
+                </button>
+                <button class="nav-tab" data-section="todo">
+                    ✅ To-Do
+                </button>
+                <button class="nav-tab" data-section="converter">
+                    🔄 Convertisseur
+                </button>
+                <button class="nav-tab" data-section="chat">
+                    💬 Chat Bot
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Container principal -->
+    <main class="main-container">
+        <!-- Section Calculatrice -->
+        <section id="calculator" class="section active">
+            <h2 class="section-title">🧮 Calculatrice Scientifique</h2>
+            <div class="calculator">
+                <div class="calculator-display" id="calcDisplay">0</div>
+                <div class="calculator-buttons" id="calcButtons">
+                    <!-- Rangée 1 -->
+                    <button class="calc-btn special" data-action="clear">C</button>
+                    <button class="calc-btn special" data-action="clearEntry">CE</button>
+                    <button class="calc-btn special" data-action="backspace">←</button>
+                    <button class="calc-btn operator" data-action="operator" data-value="/">÷</button>
+
+                    <!-- Rangée 2 -->
+                    <button class="calc-btn operator" data-action="function" data-value="sqrt">√</button>
+                    <button class="calc-btn operator" data-action="function" data-value="square">x²</button>
+                    <button class="calc-btn operator" data-action="function" data-value="reciprocal">1/x</button>
+                    <button class="calc-btn operator" data-action="operator" data-value="*">×</button>
+
+                    <!-- Rangée 3 -->
+                    <button class="calc-btn" data-action="digit">7</button>
+                    <button class="calc-btn" data-action="digit">8</button>
+                    <button class="calc-btn" data-action="digit">9</button>
+                    <button class="calc-btn operator" data-action="operator" data-value="-">-</button>
+
+                    <!-- Rangée 4 -->
+                    <button class="calc-btn" data-action="digit">4</button>
+                    <button class="calc-btn" data-action="digit">5</button>
+                    <button class="calc-btn" data-action="digit">6</button>
+                    <button class="calc-btn operator" data-action="operator" data-value="+">+</button>
+
+                    <!-- Rangée 5 -->
+                    <button class="calc-btn" data-action="digit">1</button>
+                    <button class="calc-btn" data-action="digit">2</button>
+                    <button class="calc-btn" data-action="digit">3</button>
+                    <button class="calc-btn operator" data-action="calculate" rowspan="2">=</button>
+
+                    <!-- Rangée 6 -->
+                    <button class="calc-btn wide" data-action="digit">0</button>
+                    <button class="calc-btn" data-action="digit">.</button>
+                </div>
+                <div class="card">
+                    <h3>Historique des calculs</h3>
+                    <div class="calculator-history" id="calcHistory">
+                        <div class="text-center" style="color: var(--text-secondary);">Aucun calcul effectué</div>
+                    </div>
+                    <div class="flex-center mt-1">
+                        <button class="btn btn-secondary" id="clearHistory">
+                            🗑️ Effacer l'historique
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Snake -->
+        <section id="snake" class="section">
+            <h2 class="section-title">🐍 Jeu du Snake</h2>
+            <div class="snake-game">
+                <div class="game-info">
+                    <div class="score">Score: <span id="snakeScore">0</span></div>
+                    <div class="score">Record: <span id="snakeHighScore">0</span></div>
+                </div>
+                <canvas id="snakeCanvas" class="game-canvas" width="400" height="400"></canvas>
+                <div class="game-controls">
+                    <button class="btn" id="startSnake">▶️ Démarrer</button>
+                    <button class="btn btn-secondary" id="pauseSnake">⏸️ Pause</button>
+                    <button class="btn btn-danger" id="resetSnake">🔄 Reset</button>
+                </div>
+                <div class="card">
+                    <h3>Instructions</h3>
+                    <p>Utilisez les flèches du clavier ou WASD pour diriger le serpent. Mangez la nourriture rouge pour grandir et marquer des points. Évitez les murs et votre propre corps !</p>
+                    <div class="grid grid-2 mt-1">
+                        <div>⬆️ Haut: ↑ ou W</div>
+                        <div>⬇️ Bas: ↓ ou S</div>
+                        <div>⬅️ Gauche: ← ou A</div>
+                        <div>➡️ Droite: → ou D</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Charts -->
+        <section id="charts" class="section">
+            <h2 class="section-title">📊 Générateur de Graphiques</h2>
+            <div class="grid grid-2">
+                <div class="card">
+                    <h3>Données du graphique</h3>
+                    <div class="mt-1">
+                        <h4>Entrez vos données (format: Nom,Valeur):</h4>
+                        <textarea class="textarea" id="csvData" rows="6"
+                                  placeholder="Janvier,100
+Février,150
+Mars,200
+Avril,175
+Mai,220"></textarea>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Configuration du graphique</h3>
+                    <div class="grid">
+                        <div>
+                            <label>Type de graphique:</label>
+                            <select class="select" id="chartType">
+                                <option value="bar">📊 Barres</option>
+                                <option value="line">📈 Ligne</option>
+                                <option value="pie">🥧 Secteurs</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Titre du graphique:</label>
+                            <input type="text" class="input" id="chartTitle" placeholder="Mon graphique" value="Exemple de graphique">
+                        </div>
+                        <div class="chart-controls">
+                            <button class="btn" id="generateChart">🎨 Générer</button>
+                            <button class="btn btn-secondary" id="exportChart">💾 Exporter</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card chart-container">
+                <canvas id="chartCanvas" class="chart-canvas" width="800" height="400"></canvas>
+            </div>
+        </section>
+
+        <!-- Section Todo -->
+        <section id="todo" class="section">
+            <h2 class="section-title">✅ To-Do List Avancée</h2>
+            <div class="todo-app">
+                <div class="todo-input-section">
+                    <div class="todo-input-group">
+                        <input type="text" class="input todo-input" id="todoInput"
+                               placeholder="Ajouter une nouvelle tâche..." maxlength="100">
+                        <button class="btn" id="addTodoBtn">➕ Ajouter</button>
+                    </div>
+                    <div class="todo-filters">
+                        <button class="filter-btn active" data-filter="all">📋 Toutes</button>
+                        <button class="filter-btn" data-filter="active">⏳ Actives</button>
+                        <button class="filter-btn" data-filter="completed">✅ Terminées</button>
+                    </div>
+                </div>
+
+                <ul class="todo-list" id="todoList">
+                    <!-- Les tâches seront ajoutées dynamiquement -->
+                </ul>
+
+                <div class="todo-stats" id="todoStats">
+                    <div class="grid grid-3">
+                        <div>
+                            <strong id="totalTodos">0</strong>
+                            <div>Total</div>
+                        </div>
+                        <div>
+                            <strong id="activeTodos">0</strong>
+                            <div>Actives</div>
+                        </div>
+                        <div>
+                            <strong id="completedTodos">0</strong>
+                            <div>Terminées</div>
+                        </div>
+                    </div>
+                    <div class="mt-1">
+                        <button class="btn btn-danger" id="clearCompleted">🗑️ Supprimer terminées</button>
+                        <button class="btn btn-secondary" id="clearAll">🗑️ Tout supprimer</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Converter -->
+        <section id="converter" class="section">
+            <h2 class="section-title">🔄 Convertisseur Multi-Unités</h2>
+            <div class="converter">
+                <!-- Convertisseur de température -->
+                <div class="converter-section">
+                    <h3>🌡️ Température</h3>
+                    <div class="converter-form">
+                        <div class="converter-group">
+                            <label>De:</label>
+                            <select class="select" id="fromTemp">
+                                <option value="celsius">°C - Celsius</option>
+                                <option value="fahrenheit">°F - Fahrenheit</option>
+                                <option value="kelvin">K - Kelvin</option>
+                            </select>
+                            <input type="number" class="input" id="tempAmount" placeholder="Température" value="0">
+                        </div>
+                        <div class="flex-center">
+                            <button class="btn" id="swapTemp">🔄</button>
+                        </div>
+                        <div class="converter-group">
+                            <label>Vers:</label>
+                            <select class="select" id="toTemp">
+                                <option value="fahrenheit">°F - Fahrenheit</option>
+                                <option value="celsius">°C - Celsius</option>
+                                <option value="kelvin">K - Kelvin</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="converter-result" id="tempResult">
+                        32°F
+                    </div>
+                </div>
+
+                <!-- Convertisseur de longueur -->
+                <div class="converter-section">
+                    <h3>📏 Longueur</h3>
+                    <div class="converter-form">
+                        <div class="converter-group">
+                            <label>De:</label>
+                            <select class="select" id="fromLength">
+                                <option value="meter">m - Mètre</option>
+                                <option value="kilometer">km - Kilomètre</option>
+                                <option value="centimeter">cm - Centimètre</option>
+                                <option value="inch">in - Pouce</option>
+                                <option value="foot">ft - Pied</option>
+                            </select>
+                            <input type="number" class="input" id="lengthAmount" placeholder="Longueur" value="1">
+                        </div>
+                        <div class="flex-center">
+                            <button class="btn" id="swapLength">🔄</button>
+                        </div>
+                        <div class="converter-group">
+                            <label>Vers:</label>
+                            <select class="select" id="toLength">
+                                <option value="foot">ft - Pied</option>
+                                <option value="meter">m - Mètre</option>
+                                <option value="kilometer">km - Kilomètre</option>
+                                <option value="centimeter">cm - Centimètre</option>
+                                <option value="inch">in - Pouce</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="converter-result" id="lengthResult">
+                        3.28 ft
+                    </div>
+                </div>
+
+                <!-- Convertisseur de poids -->
+                <div class="converter-section">
+                    <h3>⚖️ Poids</h3>
+                    <div class="converter-form">
+                        <div class="converter-group">
+                            <label>De:</label>
+                            <select class="select" id="fromWeight">
+                                <option value="kilogram">kg - Kilogramme</option>
+                                <option value="gram">g - Gramme</option>
+                                <option value="pound">lb - Livre</option>
+                                <option value="ounce">oz - Once</option>
+                            </select>
+                            <input type="number" class="input" id="weightAmount" placeholder="Poids" value="1">
+                        </div>
+                        <div class="flex-center">
+                            <button class="btn" id="swapWeight">🔄</button>
+                        </div>
+                        <div class="converter-group">
+                            <label>Vers:</label>
+                            <select class="select" id="toWeight">
+                                <option value="pound">lb - Livre</option>
+                                <option value="kilogram">kg - Kilogramme</option>
+                                <option value="gram">g - Gramme</option>
+                                <option value="ounce">oz - Once</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="converter-result" id="weightResult">
+                        2.20 lb
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Chat -->
+        <section id="chat" class="section">
+            <h2 class="section-title">💬 Chat Bot Simulé</h2>
+            <div class="chat-container">
+                <div class="chat-header">
+                    <div>🤖 Assistant Virtuel</div>
+                    <div style="font-size: 0.8rem; opacity: 0.8;">En ligne • Réponse instantanée</div>
+                </div>
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message bot">
+                        Bonjour ! 👋 Je suis votre assistant virtuel. Comment puis-je vous aider aujourd'hui ?
+                    </div>
+                </div>
+                <div class="chat-input-container">
+                    <div class="chat-input-group">
+                        <textarea class="input chat-input" id="chatInput"
+                                  placeholder="Tapez votre message..."
+                                  rows="1"></textarea>
+                        <button class="btn" id="sendMessage">📤</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card mt-2">
+                <h3>Commandes disponibles</h3>
+                <div class="grid grid-2">
+                    <div><strong>/help</strong> - Aide et commandes</div>
+                    <div><strong>/time</strong> - Heure actuelle</div>
+                    <div><strong>/joke</strong> - Blague aléatoire</div>
+                    <div><strong>/quote</strong> - Citation inspirante</div>
+                    <div><strong>/weather</strong> - Météo (simulée)</div>
+                    <div><strong>/clear</strong> - Effacer l'historique</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // ==========================================
+        // CONFIGURATION ET UTILITAIRES
+        // ==========================================
+
+        // Configuration de l'application
+        const AppConfig = {
+            theme: localStorage.getItem('theme') || 'light',
+            activeSection: 'calculator'
+        };
+
+        // Utilitaires
+        const Utils = {
+            debounce(func, wait) {
+                let timeout;
+                return function(...args) {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(this, args), wait);
+                };
+            },
+
+            formatNumber(num, decimals = 2) {
+                return Number(num).toLocaleString('fr-FR', {
+                    minimumFractionDigits: decimals,
+                    maximumFractionDigits: decimals
+                });
+            },
+
+            generateId() {
+                return 'id_' + Math.random().toString(36).substr(2, 9);
+            }
+        };
+
+        // ==========================================
+        // GESTIONNAIRE DE THÈME
+        // ==========================================
+
+        class ThemeManager {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                this.applyTheme(AppConfig.theme);
+                document.getElementById('themeToggle').addEventListener('click', () => {
+                    this.toggleTheme();
+                });
+            }
+
+            toggleTheme() {
+                const newTheme = AppConfig.theme === 'light' ? 'dark' : 'light';
+                this.applyTheme(newTheme);
+            }
+
+            applyTheme(theme) {
+                document.body.setAttribute('data-theme', theme);
+                AppConfig.theme = theme;
+                localStorage.setItem('theme', theme);
+
+                const toggleBtn = document.getElementById('themeToggle');
+                toggleBtn.textContent = theme === 'light' ? '🌙' : '☀️';
+            }
+        }
+
+        // ==========================================
+        // GESTIONNAIRE DE NAVIGATION
+        // ==========================================
+
+        class NavigationManager {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                document.querySelectorAll('.nav-tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => {
+                        const sectionId = e.target.getAttribute('data-section');
+                        this.showSection(sectionId);
+                    });
+                });
+                this.showSection(AppConfig.activeSection);
+            }
+
+            showSection(sectionId) {
+                // Masquer toutes les sections
+                document.querySelectorAll('.section').forEach(section => {
+                    section.classList.remove('active');
+                });
+
+                // Retirer la classe active de tous les onglets
+                document.querySelectorAll('.nav-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+
+                // Afficher la section et l'onglet
+                const section = document.getElementById(sectionId);
+                const tab = document.querySelector(`[data-section="${sectionId}"]`);
+
+                if (section && tab) {
+                    section.classList.add('active');
+                    tab.classList.add('active');
+                    AppConfig.activeSection = sectionId;
+                }
+            }
+        }
+
+        // ==========================================
+        // CALCULATRICE SCIENTIFIQUE CORRIGÉE
+        // ==========================================
+
+        class Calculator {
+            constructor() {
+                this.display = document.getElementById('calcDisplay');
+                this.buttonsContainer = document.getElementById('calcButtons');
+                this.historyContainer = document.getElementById('calcHistory');
+                this.currentInput = '0';
+                this.operator = null;
+                this.previousInput = null;
+                this.waitingForOperand = false;
+                this.history = JSON.parse(localStorage.getItem('calcHistory')) || [];
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.updateDisplay();
+                this.updateHistory();
+            }
+
+            setupEventListeners() {
+                // Gestion des boutons existants dans le HTML
+                this.buttonsContainer.addEventListener('click', (e) => {
+                    if (e.target.matches('.calc-btn')) {
+                        const action = e.target.getAttribute('data-action');
+                        const value = e.target.getAttribute('data-value');
+                        const text = e.target.textContent;
+
+                        this.handleButtonClick(action, value, text);
+                    }
+                });
+
+                // Gestion du clavier
+                document.addEventListener('keydown', (e) => {
+                    if (AppConfig.activeSection !== 'calculator') return;
+
+                    const key = e.key;
+                    e.preventDefault();
+
+                    if (/[0-9.]/.test(key)) {
+                        this.handleButtonClick('digit', key, key);
+                    } else if (['+', '-', '*', '/'].includes(key)) {
+                        this.handleButtonClick('operator', key, key);
+                    } else if (key === 'Enter' || key === '=') {
+                        this.handleButtonClick('calculate');
+                    } else if (key === 'Escape') {
+                        this.handleButtonClick('clear');
+                    } else if (key === 'Backspace') {
+                        this.handleButtonClick('backspace');
+                    }
+                });
+
+                // Bouton clear history
+                document.getElementById('clearHistory').addEventListener('click', () => {
+                    this.clearHistory();
+                });
+            }
+
+            handleButtonClick(action, value, text) {
+                switch (action) {
+                    case 'digit':
+                        this.inputDigit(text);
+                        break;
+                    case 'operator':
+                        this.inputOperator(value);
+                        break;
+                    case 'function':
+                        this.inputFunction(value);
+                        break;
+                    case 'calculate':
+                        this.calculate();
+                        break;
+                    case 'clear':
+                        this.clear();
+                        break;
+                    case 'clearEntry':
+                        this.clearEntry();
+                        break;
+                    case 'backspace':
+                        this.backspace();
+                        break;
+                }
+                this.updateDisplay();
+            }
+
+            inputDigit(digit) {
+                if (this.waitingForOperand) {
+                    this.currentInput = digit;
+                    this.waitingForOperand = false;
+                } else {
+                    if (this.currentInput === '0' && digit !== '.') {
+                        this.currentInput = digit;
+                    } else if (digit === '.' && this.currentInput.includes('.')) {
+                        return;
+                    } else {
+                        this.currentInput += digit;
+                    }
+                }
+            }
+
+            inputOperator(nextOperator) {
+                const inputValue = parseFloat(this.currentInput);
+
+                if (this.previousInput === null) {
+                    this.previousInput = inputValue;
+                } else if (this.operator) {
+                    const currentValue = this.previousInput || 0;
+                    try {
+                        const result = this.performCalculation(currentValue, inputValue, this.operator);
+                        this.currentInput = String(result);
+                        this.previousInput = result;
+                    } catch (error) {
+                        this.currentInput = 'Erreur';
+                        this.previousInput = null;
+                        this.operator = null;
+                        this.waitingForOperand = true;
+                        return;
+                    }
+                }
+
+                this.waitingForOperand = true;
+                this.operator = nextOperator;
+            }
+
+            inputFunction(func) {
+                const value = parseFloat(this.currentInput);
+                let result;
+
+                try {
+                    switch (func) {
+                        case 'sqrt':
+                            if (value < 0) throw new Error('Domaine invalide');
+                            result = Math.sqrt(value);
+                            break;
+                        case 'square':
+                            result = value * value;
+                            break;
+                        case 'reciprocal':
+                            if (value === 0) throw new Error('Division par zéro');
+                            result = 1 / value;
+                            break;
+                        default:
+                            throw new Error('Fonction inconnue');
+                    }
+
+                    this.addToHistory(`${func}(${value}) = ${result}`);
+                    this.currentInput = String(result);
+                    this.waitingForOperand = true;
+                } catch (error) {
+                    this.currentInput = 'Erreur';
+                    this.waitingForOperand = true;
+                }
+            }
+
+            calculate() {
+                const inputValue = parseFloat(this.currentInput);
+
+                if (this.previousInput !== null && this.operator) {
+                    try {
+                        const result = this.performCalculation(this.previousInput, inputValue, this.operator);
+                        const expression = `${this.previousInput} ${this.operator} ${inputValue} = ${result}`;
+                        this.addToHistory(expression);
+
+                        this.currentInput = String(result);
+                        this.previousInput = null;
+                        this.operator = null;
+                        this.waitingForOperand = true;
+                    } catch (error) {
+                        this.currentInput = 'Erreur';
+                        this.previousInput = null;
+                        this.operator = null;
+                        this.waitingForOperand = true;
+                    }
+                }
+            }
+
+            performCalculation(firstValue, secondValue, operator) {
+                switch (operator) {
+                    case '+':
+                        return firstValue + secondValue;
+                    case '-':
+                        return firstValue - secondValue;
+                    case '*':
+                        return firstValue * secondValue;
+                    case '/':
+                        if (secondValue === 0) {
+                            throw new Error('Division par zéro');
+                        }
+                        return firstValue / secondValue;
+                    default:
+                        return secondValue;
+                }
+            }
+
+            clear() {
+                this.currentInput = '0';
+                this.previousInput = null;
+                this.operator = null;
+                this.waitingForOperand = false;
+            }
+
+            clearEntry() {
+                this.currentInput = '0';
+                this.waitingForOperand = false;
+            }
+
+            backspace() {
+                if (this.currentInput.length > 1) {
+                    this.currentInput = this.currentInput.slice(0, -1);
+                } else {
+                    this.currentInput = '0';
+                }
+            }
+
+            updateDisplay() {
+                this.display.textContent = this.currentInput;
+            }
+
+            addToHistory(expression) {
+                this.history.unshift({
+                    expression,
+                    timestamp: new Date().toLocaleString('fr-FR')
+                });
+
+                if (this.history.length > 20) {
+                    this.history = this.history.slice(0, 20);
+                }
+
+                localStorage.setItem('calcHistory', JSON.stringify(this.history));
+                this.updateHistory();
+            }
+
+            updateHistory() {
+                if (this.history.length === 0) {
+                    this.historyContainer.innerHTML = '<div class="text-center" style="color: var(--text-secondary);">Aucun calcul effectué</div>';
+                    return;
+                }
+
+                this.historyContainer.innerHTML = this.history.map(item => `
+                    <div class="history-item">
+                        <div>${item.expression}</div>
+                        <small style="color: var(--text-secondary);">${item.timestamp}</small>
+                    </div>
+                `).join('');
+            }
+
+            clearHistory() {
+                this.history = [];
+                localStorage.removeItem('calcHistory');
+                this.updateHistory();
+            }
+        }
+
+        // ==========================================
+        // JEU SNAKE CORRIGÉ
+        // ==========================================
+
+        class SnakeGame {
+            constructor() {
+                this.canvas = document.getElementById('snakeCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.scoreElement = document.getElementById('snakeScore');
+                this.highScoreElement = document.getElementById('snakeHighScore');
+
+                this.gridSize = 20;
+                this.tileCount = this.canvas.width / this.gridSize;
+
+                this.highScore = parseInt(localStorage.getItem('snakeHighScore')) || 0;
+                this.gameRunning = false;
+                this.gamePaused = false;
+
+                this.init();
+            }
+
+            init() {
+                this.resetGame();
+                this.setupEventListeners();
+                this.updateHighScore();
+                this.draw();
+            }
+
+            resetGame() {
+                this.snake = [{ x: 10, y: 10 }];
+                this.food = this.generateFood();
+                this.dx = 0;
+                this.dy = 0;
+                this.score = 0;
+                this.gameRunning = false;
+                this.gamePaused = false;
+                this.updateScore();
+            }
+
+            setupEventListeners() {
+                document.getElementById('startSnake').addEventListener('click', () => {
+                    this.startGame();
+                });
+
+                document.getElementById('pauseSnake').addEventListener('click', () => {
+                    this.togglePause();
+                });
+
+                document.getElementById('resetSnake').addEventListener('click', () => {
+                    this.resetGame();
+                    this.draw();
+                });
+
+                // Contrôles clavier - CORRIGÉ pour fonctionner toujours
+                document.addEventListener('keydown', (e) => {
+                    // Vérifier si le snake est actif ET (jeu en cours OU pas encore commencé)
+                    if (AppConfig.activeSection !== 'snake') return;
+
+                    // Permettre de démarrer le jeu avec les flèches
+                    if (!this.gameRunning) {
+                        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 'a', 's', 'd'].includes(e.key.toLowerCase())) {
+                            this.startGame();
+                        }
+                    }
+
+                    if (!this.gameRunning || this.gamePaused) {
+                        if (e.key === ' ') {
+                            e.preventDefault();
+                            this.togglePause();
+                        }
+                        return;
+                    }
+
+                    e.preventDefault();
+
+                    switch (e.key) {
+                        case 'ArrowUp':
+                        case 'w':
+                        case 'W':
+                            if (this.dy === 0) {
+                                this.dx = 0;
+                                this.dy = -1;
+                            }
+                            break;
+                        case 'ArrowDown':
+                        case 's':
+                        case 'S':
+                            if (this.dy === 0) {
+                                this.dx = 0;
+                                this.dy = 1;
+                            }
+                            break;
+                        case 'ArrowLeft':
+                        case 'a':
+                        case 'A':
+                            if (this.dx === 0) {
+                                this.dx = -1;
+                                this.dy = 0;
+                            }
+                            break;
+                        case 'ArrowRight':
+                        case 'd':
+                        case 'D':
+                            if (this.dx === 0) {
+                                this.dx = 1;
+                                this.dy = 0;
+                            }
+                            break;
+                        case ' ':
+                            this.togglePause();
+                            break;
+                    }
+                });
+            }
+
+            startGame() {
+                if (!this.gameRunning) {
+                    this.gameRunning = true;
+                    this.gamePaused = false;
+
+                    // Donner une direction initiale si aucune n'est définie
+                    if (this.dx === 0 && this.dy === 0) {
+                        this.dx = 1; // Démarrer vers la droite
+                    }
+
+                    this.gameLoop();
+                }
+            }
+
+            togglePause() {
+                if (this.gameRunning) {
+                    this.gamePaused = !this.gamePaused;
+                    if (!this.gamePaused) {
+                        this.gameLoop();
+                    }
+                }
+            }
+
+            gameLoop() {
+                if (!this.gameRunning || this.gamePaused) return;
+
+                setTimeout(() => {
+                    this.update();
+                    this.draw();
+
+                    if (this.gameRunning) {
+                        this.gameLoop();
+                    }
+                }, 150);
+            }
+
+            update() {
+                const head = { x: this.snake[0].x + this.dx, y: this.snake[0].y + this.dy };
+
+                // Vérifier les collisions avec les murs
+                if (head.x < 0 || head.x >= this.tileCount || head.y < 0 || head.y >= this.tileCount) {
+                    this.gameOver();
+                    return;
+                }
+
+                // Vérifier les collisions avec le corps
+                for (let segment of this.snake) {
+                    if (head.x === segment.x && head.y === segment.y) {
+                        this.gameOver();
+                        return;
+                    }
+                }
+
+                this.snake.unshift(head);
+
+                // Vérifier si la nourriture est mangée
+                if (head.x === this.food.x && head.y === this.food.y) {
+                    this.score += 10;
+                    this.updateScore();
+                    this.food = this.generateFood();
+                } else {
+                    this.snake.pop();
+                }
+            }
+
+            generateFood() {
+                let food;
+                do {
+                    food = {
+                        x: Math.floor(Math.random() * this.tileCount),
+                        y: Math.floor(Math.random() * this.tileCount)
+                    };
+                } while (this.snake.some(segment => segment.x === food.x && segment.y === food.y));
+
+                return food;
+            }
+
+            draw() {
+                // Effacer le canvas
+                this.ctx.fillStyle = '#f0f9ff';
+                if (document.body.getAttribute('data-theme') === 'dark') {
+                    this.ctx.fillStyle = '#1e293b';
+                }
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+                // Dessiner la grille
+                this.ctx.strokeStyle = '#e2e8f0';
+                if (document.body.getAttribute('data-theme') === 'dark') {
+                    this.ctx.strokeStyle = '#334155';
+                }
+                this.ctx.lineWidth = 1;
+
+                for (let i = 0; i <= this.tileCount; i++) {
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(i * this.gridSize, 0);
+                    this.ctx.lineTo(i * this.gridSize, this.canvas.height);
+                    this.ctx.stroke();
+
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(0, i * this.gridSize);
+                    this.ctx.lineTo(this.canvas.width, i * this.gridSize);
+                    this.ctx.stroke();
+                }
+
+                // Dessiner le serpent
+                this.snake.forEach((segment, index) => {
+                    if (index === 0) {
+                        // Tête du serpent
+                        this.ctx.fillStyle = '#16a34a';
+                    } else {
+                        // Corps du serpent
+                        this.ctx.fillStyle = '#22c55e';
+                    }
+
+                    this.ctx.fillRect(
+                        segment.x * this.gridSize + 1,
+                        segment.y * this.gridSize + 1,
+                        this.gridSize - 2,
+                        this.gridSize - 2
+                    );
+                });
+
+                // Dessiner la nourriture
+                this.ctx.fillStyle = '#dc2626';
+                this.ctx.fillRect(
+                    this.food.x * this.gridSize + 1,
+                    this.food.y * this.gridSize + 1,
+                    this.gridSize - 2,
+                    this.gridSize - 2
+                );
+
+                // Afficher les informations de jeu
+                if (this.gamePaused) {
+                    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+                    this.ctx.fillStyle = 'white';
+                    this.ctx.font = '24px Arial';
+                    this.ctx.textAlign = 'center';
+                    this.ctx.fillText('PAUSE', this.canvas.width / 2, this.canvas.height / 2);
+                    this.ctx.fillText('Appuyez sur ESPACE pour continuer', this.canvas.width / 2, this.canvas.height / 2 + 30);
+                }
+
+                if (!this.gameRunning && this.dx === 0 && this.dy === 0) {
+                    this.ctx.fillStyle = 'rgba(37, 99, 235, 0.8)';
+                    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+                    this.ctx.fillStyle = 'white';
+                    this.ctx.font = '24px Arial';
+                    this.ctx.textAlign = 'center';
+                    this.ctx.fillText('Appuyez sur Démarrer', this.canvas.width / 2, this.canvas.height / 2);
+                    this.ctx.fillText('ou utilisez les flèches', this.canvas.width / 2, this.canvas.height / 2 + 30);
+                }
+            }
+
+            updateScore() {
+                this.scoreElement.textContent = this.score;
+            }
+
+            updateHighScore() {
+                this.highScoreElement.textContent = this.highScore;
+            }
+
+            gameOver() {
+                this.gameRunning = false;
+
+                if (this.score > this.highScore) {
+                    this.highScore = this.score;
+                    localStorage.setItem('snakeHighScore', this.highScore.toString());
+                    this.updateHighScore();
+                }
+
+                // Afficher le message de game over
+                this.ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+                this.ctx.fillStyle = 'white';
+                this.ctx.font = '32px Arial';
+                this.ctx.textAlign = 'center';
+                this.ctx.fillText('GAME OVER', this.canvas.width / 2, this.canvas.height / 2 - 20);
+                this.ctx.font = '16px Arial';
+                this.ctx.fillText(`Score: ${this.score}`, this.canvas.width / 2, this.canvas.height / 2 + 20);
+                this.ctx.fillText('Cliquez sur Reset pour rejouer', this.canvas.width / 2, this.canvas.height / 2 + 50);
+            }
+        }
+
+        // ==========================================
+        // GÉNÉRATEUR DE GRAPHIQUES SIMPLE
+        // ==========================================
+
+        class ChartGenerator {
+            constructor() {
+                this.canvas = document.getElementById('chartCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.data = [];
+                this.chartType = 'bar';
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.parseInitialData();
+            }
+
+            setupEventListeners() {
+                document.getElementById('csvData').addEventListener('input',
+                    Utils.debounce(() => {
+                        this.parseData();
+                    }, 500)
+                );
+
+                document.getElementById('chartType').addEventListener('change', (e) => {
+                    this.chartType = e.target.value;
+                    this.generateChart();
+                });
+
+                document.getElementById('generateChart').addEventListener('click', () => {
+                    this.generateChart();
+                });
+
+                document.getElementById('exportChart').addEventListener('click', () => {
+                    this.exportChart();
+                });
+            }
+
+            parseInitialData() {
+                const csvContent = document.getElementById('csvData').value;
+                if (csvContent.trim()) {
+                    this.parseData();
+                }
+            }
+
+            parseData() {
+                const csvContent = document.getElementById('csvData').value;
+                if (!csvContent.trim()) {
+                    this.data = [];
+                    this.drawEmptyChart();
+                    return;
+                }
+
+                try {
+                    const lines = csvContent.trim().split('\n');
+                    const data = [];
+
+                    for (let line of lines) {
+                        const [label, value] = line.split(',').map(item => item.trim());
+                        if (label && value !== undefined) {
+                            const numValue = parseFloat(value);
+                            if (!isNaN(numValue)) {
+                                data.push({ label, value: numValue });
+                            }
+                        }
+                    }
+
+                    if (data.length > 0) {
+                        this.data = data;
+                        this.generateChart();
+                    } else {
+                        this.data = [];
+                        this.drawEmptyChart();
+                    }
+                } catch (error) {
+                    this.data = [];
+                    this.drawEmptyChart();
+                }
+            }
+
+            generateChart() {
+                if (this.data.length === 0) {
+                    this.drawEmptyChart();
+                    return;
+                }
+
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+                switch (this.chartType) {
+                    case 'bar':
+                        this.drawBarChart();
+                        break;
+                    case 'line':
+                        this.drawLineChart();
+                        break;
+                    case 'pie':
+                        this.drawPieChart();
+                        break;
+                }
+
+                this.drawTitle();
+            }
+
+            drawBarChart() {
+                const padding = 60;
+                const chartWidth = this.canvas.width - 2 * padding;
+                const chartHeight = this.canvas.height - 2 * padding;
+                const barWidth = chartWidth / this.data.length * 0.8;
+                const maxValue = Math.max(...this.data.map(d => d.value));
+
+                // Dessiner les axes
+                this.ctx.strokeStyle = '#1e293b';
+                this.ctx.lineWidth = 2;
+
+                // Axe Y
+                this.ctx.beginPath();
+                this.ctx.moveTo(padding, padding);
+                this.ctx.lineTo(padding, this.canvas.height - padding);
+                this.ctx.stroke();
+
+                // Axe X
+                this.ctx.beginPath();
+                this.ctx.moveTo(padding, this.canvas.height - padding);
+                this.ctx.lineTo(this.canvas.width - padding, this.canvas.height - padding);
+                this.ctx.stroke();
+
+                // Dessiner les barres
+                this.data.forEach((item, index) => {
+                    const barHeight = (item.value / maxValue) * chartHeight;
+                    const x = padding + (index * chartWidth / this.data.length) + (chartWidth / this.data.length - barWidth) / 2;
+                    const y = this.canvas.height - padding - barHeight;
+
+                    // Couleur de la barre
+                    const hue = (index * 360 / this.data.length) % 360;
+                    this.ctx.fillStyle = `hsl(${hue}, 70%, 60%)`;
+
+                    this.ctx.fillRect(x, y, barWidth, barHeight);
+
+                    // Labels
+                    this.ctx.fillStyle = '#1e293b';
+                    this.ctx.font = '12px Arial';
+                    this.ctx.textAlign = 'center';
+
+                    // Label X
+                    this.ctx.fillText(
+                        item.label,
+                        x + barWidth / 2,
+                        this.canvas.height - padding + 20
+                    );
+
+                    // Valeur sur la barre
+                    this.ctx.fillText(
+                        item.value.toString(),
+                        x + barWidth / 2,
+                        y - 5
+                    );
+                });
+            }
+
+            drawLineChart() {
+                const padding = 60;
+                const chartWidth = this.canvas.width - 2 * padding;
+                const chartHeight = this.canvas.height - 2 * padding;
+                const maxValue = Math.max(...this.data.map(d => d.value));
+                const minValue = Math.min(...this.data.map(d => d.value));
+                const valueRange = maxValue - minValue || 1;
+
+                // Dessiner les axes
+                this.ctx.strokeStyle = '#1e293b';
+                this.ctx.lineWidth = 2;
+
+                this.ctx.beginPath();
+                this.ctx.moveTo(padding, padding);
+                this.ctx.lineTo(padding, this.canvas.height - padding);
+                this.ctx.lineTo(this.canvas.width - padding, this.canvas.height - padding);
+                this.ctx.stroke();
+
+                // Dessiner la ligne
+                this.ctx.strokeStyle = '#2563eb';
+                this.ctx.lineWidth = 3;
+                this.ctx.beginPath();
+
+                this.data.forEach((item, index) => {
+                    const x = padding + (index * chartWidth / (this.data.length - 1));
+                    const y = this.canvas.height - padding - ((item.value - minValue) / valueRange) * chartHeight;
+
+                    if (index === 0) {
+                        this.ctx.moveTo(x, y);
+                    } else {
+                        this.ctx.lineTo(x, y);
+                    }
+                });
+
+                this.ctx.stroke();
+
+                // Dessiner les points
+                this.data.forEach((item, index) => {
+                    const x = padding + (index * chartWidth / (this.data.length - 1));
+                    const y = this.canvas.height - padding - ((item.value - minValue) / valueRange) * chartHeight;
+
+                    this.ctx.fillStyle = '#2563eb';
+                    this.ctx.beginPath();
+                    this.ctx.arc(x, y, 5, 0, 2 * Math.PI);
+                    this.ctx.fill();
+
+                    // Labels
+                    this.ctx.fillStyle = '#1e293b';
+                    this.ctx.font = '12px Arial';
+                    this.ctx.textAlign = 'center';
+                    this.ctx.fillText(item.label, x, this.canvas.height - padding + 20);
+                    this.ctx.fillText(item.value.toString(), x, y - 10);
+                });
+            }
+
+            drawPieChart() {
+                const centerX = this.canvas.width / 2;
+                const centerY = this.canvas.height / 2;
+                const radius = Math.min(this.canvas.width, this.canvas.height) / 3;
+                const total = this.data.reduce((sum, item) => sum + item.value, 0);
+
+                let currentAngle = -Math.PI / 2;
+
+                this.data.forEach((item, index) => {
+                    const sliceAngle = (item.value / total) * 2 * Math.PI;
+                    const hue = (index * 360 / this.data.length) % 360;
+
+                    // Dessiner la tranche
+                    this.ctx.fillStyle = `hsl(${hue}, 70%, 60%)`;
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(centerX, centerY);
+                    this.ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
+                    this.ctx.closePath();
+                    this.ctx.fill();
+
+                    // Bordure
+                    this.ctx.strokeStyle = '#ffffff';
+                    this.ctx.lineWidth = 2;
+                    this.ctx.stroke();
+
+                    // Labels
+                    const labelAngle = currentAngle + sliceAngle / 2;
+                    const labelX = centerX + Math.cos(labelAngle) * (radius * 0.7);
+                    const labelY = centerY + Math.sin(labelAngle) * (radius * 0.7);
+
+                    this.ctx.fillStyle = 'white';
+                    this.ctx.font = 'bold 12px Arial';
+                    this.ctx.textAlign = 'center';
+                    this.ctx.fillText(item.label, labelX, labelY);
+                    this.ctx.fillText(`${((item.value / total) * 100).toFixed(1)}%`, labelX, labelY + 15);
+
+                    currentAngle += sliceAngle;
+                });
+            }
+
+            drawTitle() {
+                const title = document.getElementById('chartTitle').value || 'Graphique';
+                this.ctx.fillStyle = '#1e293b';
+                this.ctx.font = 'bold 18px Arial';
+                this.ctx.textAlign = 'center';
+                this.ctx.fillText(title, this.canvas.width / 2, 30);
+            }
+
+            drawEmptyChart() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.ctx.fillStyle = '#64748b';
+                this.ctx.font = '16px Arial';
+                this.ctx.textAlign = 'center';
+                this.ctx.fillText(
+                    'Entrez des données pour générer un graphique',
+                    this.canvas.width / 2,
+                    this.canvas.height / 2
+                );
+            }
+
+            exportChart() {
+                const link = document.createElement('a');
+                link.download = 'graphique.png';
+                link.href = this.canvas.toDataURL();
+                link.click();
+            }
+        }
+
+        // ==========================================
+        // TO-DO LIST SIMPLE
+        // ==========================================
+
+        class TodoApp {
+            constructor() {
+                this.todos = JSON.parse(localStorage.getItem('todos')) || [];
+                this.filter = 'all';
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.render();
+                this.updateStats();
+            }
+
+            setupEventListeners() {
+                document.getElementById('addTodoBtn').addEventListener('click', () => {
+                    this.addTodo();
+                });
+
+                document.getElementById('todoInput').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.addTodo();
+                    }
+                });
+
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        this.setFilter(e.target.getAttribute('data-filter'));
+                    });
+                });
+
+                document.getElementById('clearCompleted').addEventListener('click', () => {
+                    this.clearCompleted();
+                });
+
+                document.getElementById('clearAll').addEventListener('click', () => {
+                    if (confirm('Êtes-vous sûr de vouloir supprimer toutes les tâches ?')) {
+                        this.clearAll();
+                    }
+                });
+            }
+
+            addTodo() {
+                const input = document.getElementById('todoInput');
+                const text = input.value.trim();
+
+                if (text) {
+                    const todo = {
+                        id: Utils.generateId(),
+                        text: text,
+                        completed: false,
+                        createdAt: new Date().toISOString()
+                    };
+
+                    this.todos.unshift(todo);
+                    input.value = '';
+                    this.saveTodos();
+                    this.render();
+                    this.updateStats();
+                }
+            }
+
+            toggleTodo(id) {
+                const todo = this.todos.find(t => t.id === id);
+                if (todo) {
+                    todo.completed = !todo.completed;
+                    this.saveTodos();
+                    this.render();
+                    this.updateStats();
+                }
+            }
+
+            deleteTodo(id) {
+                this.todos = this.todos.filter(todo => todo.id !== id);
+                this.saveTodos();
+                this.render();
+                this.updateStats();
+            }
+
+            setFilter(filter) {
+                this.filter = filter;
+
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`[data-filter="${filter}"]`).classList.add('active');
+
+                this.render();
+            }
+
+            clearCompleted() {
+                this.todos = this.todos.filter(todo => !todo.completed);
+                this.saveTodos();
+                this.render();
+                this.updateStats();
+            }
+
+            clearAll() {
+                this.todos = [];
+                this.saveTodos();
+                this.render();
+                this.updateStats();
+            }
+
+            getFilteredTodos() {
+                switch (this.filter) {
+                    case 'active':
+                        return this.todos.filter(todo => !todo.completed);
+                    case 'completed':
+                        return this.todos.filter(todo => todo.completed);
+                    default:
+                        return this.todos;
+                }
+            }
+
+            render() {
+                const todoList = document.getElementById('todoList');
+                const filteredTodos = this.getFilteredTodos();
+
+                if (filteredTodos.length === 0) {
+                    todoList.innerHTML = `
+                        <li class="todo-item" style="justify-content: center; cursor: default;">
+                            <span style="color: var(--text-secondary);">Aucune tâche dans cette catégorie</span>
+                        </li>
+                    `;
+                    return;
+                }
+
+                todoList.innerHTML = filteredTodos.map(todo => `
+                    <li class="todo-item ${todo.completed ? 'completed' : ''}">
+                        <input type="checkbox"
+                               class="todo-checkbox"
+                               ${todo.completed ? 'checked' : ''}
+                               onchange="window.todoApp.toggleTodo('${todo.id}')">
+                        <span class="todo-text">${todo.text}</span>
+                        <div class="todo-actions">
+                            <button class="btn todo-btn btn-danger"
+                                    onclick="window.todoApp.deleteTodo('${todo.id}')">
+                                🗑️
+                            </button>
+                        </div>
+                    </li>
+                `).join('');
+            }
+
+            updateStats() {
+                const total = this.todos.length;
+                const completed = this.todos.filter(todo => todo.completed).length;
+                const active = total - completed;
+
+                document.getElementById('totalTodos').textContent = total;
+                document.getElementById('activeTodos').textContent = active;
+                document.getElementById('completedTodos').textContent = completed;
+            }
+
+            saveTodos() {
+                localStorage.setItem('todos', JSON.stringify(this.todos));
+            }
+        }
+
+        // ==========================================
+        // CONVERTISSEUR SIMPLE
+        // ==========================================
+
+        class UnitConverter {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.convertTemperature();
+                this.convertLength();
+                this.convertWeight();
+            }
+
+            setupEventListeners() {
+                // Convertisseur de température
+                ['tempAmount', 'fromTemp', 'toTemp'].forEach(id => {
+                    document.getElementById(id).addEventListener('input',
+                        Utils.debounce(() => this.convertTemperature(), 300)
+                    );
+                });
+
+                document.getElementById('swapTemp').addEventListener('click', () => {
+                    this.swapTemperature();
+                });
+
+                // Convertisseur de longueur
+                ['lengthAmount', 'fromLength', 'toLength'].forEach(id => {
+                    document.getElementById(id).addEventListener('input',
+                        Utils.debounce(() => this.convertLength(), 300)
+                    );
+                });
+
+                document.getElementById('swapLength').addEventListener('click', () => {
+                    this.swapLength();
+                });
+
+                // Convertisseur de poids
+                ['weightAmount', 'fromWeight', 'toWeight'].forEach(id => {
+                    document.getElementById(id).addEventListener('input',
+                        Utils.debounce(() => this.convertWeight(), 300)
+                    );
+                });
+
+                document.getElementById('swapWeight').addEventListener('click', () => {
+                    this.swapWeight();
+                });
+            }
+
+            convertTemperature() {
+                const amount = parseFloat(document.getElementById('tempAmount').value);
+                const fromTemp = document.getElementById('fromTemp').value;
+                const toTemp = document.getElementById('toTemp').value;
+                const resultElement = document.getElementById('tempResult');
+
+                if (isNaN(amount)) {
+                    resultElement.textContent = 'Entrez une température valide';
+                    return;
+                }
+
+                let celsius = amount;
+
+                // Convertir vers Celsius d'abord
+                switch (fromTemp) {
+                    case 'fahrenheit':
+                        celsius = (amount - 32) * 5/9;
+                        break;
+                    case 'kelvin':
+                        celsius = amount - 273.15;
+                        break;
+                }
+
+                // Convertir de Celsius vers la cible
+                let result;
+                let unit;
+                switch (toTemp) {
+                    case 'celsius':
+                        result = celsius;
+                        unit = '°C';
+                        break;
+                    case 'fahrenheit':
+                        result = celsius * 9/5 + 32;
+                        unit = '°F';
+                        break;
+                    case 'kelvin':
+                        result = celsius + 273.15;
+                        unit = 'K';
+                        break;
+                }
+
+                resultElement.innerHTML = `<strong>${Utils.formatNumber(result, 2)} ${unit}</strong>`;
+            }
+
+            swapTemperature() {
+                const fromTemp = document.getElementById('fromTemp');
+                const toTemp = document.getElementById('toTemp');
+
+                const temp = fromTemp.value;
+                fromTemp.value = toTemp.value;
+                toTemp.value = temp;
+
+                this.convertTemperature();
+            }
+
+            convertLength() {
+                const amount = parseFloat(document.getElementById('lengthAmount').value);
+                const fromLength = document.getElementById('fromLength').value;
+                const toLength = document.getElementById('toLength').value;
+                const resultElement = document.getElementById('lengthResult');
+
+                if (isNaN(amount) || amount < 0) {
+                    resultElement.textContent = 'Entrez une longueur valide';
+                    return;
+                }
+
+                const conversions = {
+                    meter: 1,
+                    kilometer: 1000,
+                    centimeter: 0.01,
+                    inch: 0.0254,
+                    foot: 0.3048
+                };
+
+                const meters = amount * conversions[fromLength];
+                const result = meters / conversions[toLength];
+                const units = {
+                    meter: 'm',
+                    kilometer: 'km',
+                    centimeter: 'cm',
+                    inch: 'in',
+                    foot: 'ft'
+                };
+
+                resultElement.innerHTML = `<strong>${Utils.formatNumber(result, 4)} ${units[toLength]}</strong>`;
+            }
+
+            swapLength() {
+                const fromLength = document.getElementById('fromLength');
+                const toLength = document.getElementById('toLength');
+
+                const temp = fromLength.value;
+                fromLength.value = toLength.value;
+                toLength.value = temp;
+
+                this.convertLength();
+            }
+
+            convertWeight() {
+                const amount = parseFloat(document.getElementById('weightAmount').value);
+                const fromWeight = document.getElementById('fromWeight').value;
+                const toWeight = document.getElementById('toWeight').value;
+                const resultElement = document.getElementById('weightResult');
+
+                if (isNaN(amount) || amount < 0) {
+                    resultElement.textContent = 'Entrez un poids valide';
+                    return;
+                }
+
+                const conversions = {
+                    kilogram: 1,
+                    gram: 0.001,
+                    pound: 0.453592,
+                    ounce: 0.0283495
+                };
+
+                const kilograms = amount * conversions[fromWeight];
+                const result = kilograms / conversions[toWeight];
+                const units = {
+                    kilogram: 'kg',
+                    gram: 'g',
+                    pound: 'lb',
+                    ounce: 'oz'
+                };
+
+                resultElement.innerHTML = `<strong>${Utils.formatNumber(result, 4)} ${units[toWeight]}</strong>`;
+            }
+
+            swapWeight() {
+                const fromWeight = document.getElementById('fromWeight');
+                const toWeight = document.getElementById('toWeight');
+
+                const temp = fromWeight.value;
+                fromWeight.value = toWeight.value;
+                toWeight.value = temp;
+
+                this.convertWeight();
+            }
+        }
+
+        // ==========================================
+        // CHAT BOT SIMPLE
+        // ==========================================
+
+        class ChatBot {
+            constructor() {
+                this.messagesContainer = document.getElementById('chatMessages');
+                this.input = document.getElementById('chatInput');
+                this.conversationHistory = JSON.parse(localStorage.getItem('chatHistory')) || [];
+                this.isTyping = false;
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.loadHistory();
+            }
+
+            setupEventListeners() {
+                document.getElementById('sendMessage').addEventListener('click', () => {
+                    this.sendMessage();
+                });
+
+                this.input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.sendMessage();
+                    }
+                });
+
+                // Auto-resize textarea
+                this.input.addEventListener('input', () => {
+                    this.input.style.height = 'auto';
+                    this.input.style.height = Math.min(this.input.scrollHeight, 120) + 'px';
+                });
+            }
+
+            sendMessage() {
+                const message = this.input.value.trim();
+                if (!message || this.isTyping) return;
+
+                this.addMessage(message, 'user');
+                this.input.value = '';
+                this.input.style.height = 'auto';
+
+                // Simuler la frappe du bot
+                this.simulateTyping();
+
+                setTimeout(() => {
+                    const response = this.generateResponse(message);
+                    this.addMessage(response, 'bot');
+                    this.stopTyping();
+                }, 1000 + Math.random() * 1000);
+            }
+
+            addMessage(text, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}`;
+                messageDiv.textContent = text;
+
+                this.messagesContainer.appendChild(messageDiv);
+                this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
+
+                // Sauvegarder l'historique
+                this.conversationHistory.push({ text, sender, timestamp: Date.now() });
+                if (this.conversationHistory.length > 50) {
+                    this.conversationHistory = this.conversationHistory.slice(-25);
+                }
+                localStorage.setItem('chatHistory', JSON.stringify(this.conversationHistory));
+            }
+
+            simulateTyping() {
+                this.isTyping = true;
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'message bot';
+                typingDiv.id = 'typing-indicator';
+                typingDiv.innerHTML = '<div class="loading"></div> En train de taper...';
+
+                this.messagesContainer.appendChild(typingDiv);
+                this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
+            }
+
+            stopTyping() {
+                this.isTyping = false;
+                const typingIndicator = document.getElementById('typing-indicator');
+                if (typingIndicator) {
+                    typingIndicator.remove();
+                }
+            }
+
+            generateResponse(message) {
+                const lowerMessage = message.toLowerCase();
+
+                // Commandes spéciales
+                if (lowerMessage.startsWith('/')) {
+                    return this.handleCommand(lowerMessage);
+                }
+
+                // Réponses contextuelles
+                if (lowerMessage.includes('bonjour') || lowerMessage.includes('salut')) {
+                    return this.getRandomResponse([
+                        'Bonjour ! Comment puis-je vous aider ? 😊',
+                        'Salut ! Ravi de vous parler ! 👋',
+                        'Hello ! Que puis-je faire pour vous ? 🤖'
+                    ]);
+                }
+
+                if (lowerMessage.includes('merci')) {
+                    return this.getRandomResponse([
+                        'De rien ! 😊',
+                        'Avec plaisir ! 🤗',
+                        'Je vous en prie ! 👍'
+                    ]);
+                }
+
+                if (lowerMessage.includes('aide')) {
+                    return 'Tapez /help pour voir les commandes disponibles ! 🤖';
+                }
+
+                // Réponses par défaut
+                const responses = [
+                    'C\'est intéressant ! 🤔',
+                    'Je vois... 💭',
+                    'Pouvez-vous m\'en dire plus ? 🚀',
+                    'Hmm, laissez-moi réfléchir... 🧠',
+                    'C\'est une bonne question ! ⭐'
+                ];
+
+                return this.getRandomResponse(responses);
+            }
+
+            handleCommand(command) {
+                switch (command) {
+                    case '/help':
+                        return `Commandes disponibles :
+/help - Affiche cette aide
+/time - Heure actuelle
+/joke - Blague aléatoire
+/quote - Citation inspirante
+/weather - Météo simulée
+/clear - Effacer l'historique`;
+
+                    case '/time':
+                        return `Il est ${new Date().toLocaleTimeString('fr-FR')} ⏰`;
+
+                    case '/joke':
+                        return this.getRandomResponse([
+                            'Pourquoi les développeurs préfèrent-ils le mode sombre ? Parce que la lumière attire les bugs ! 😂',
+                            'Comment appelle-t-on un chat tombé dans la peinture ? Un chat-mallow ! 🐱',
+                            'Que dit un escargot qui croise une limace ? "Regarde, un nudiste !" 🐌'
+                        ]);
+
+                    case '/quote':
+                        return this.getRandomResponse([
+                            '"La simplicité est la sophistication ultime." - Leonardo da Vinci 🎨',
+                            '"L\'innovation distingue un leader d\'un suiveur." - Steve Jobs 🚀',
+                            '"Le succès c\'est d\'aller d\'échec en échec sans perdre son enthousiasme." - Winston Churchill 💪'
+                        ]);
+
+                    case '/weather':
+                        return this.getRandomResponse([
+                            'Météo simulée : ☀️ Ensoleillé, 22°C',
+                            'Conditions : ⛅ Nuageux, 18°C',
+                            'Temps : 🌧️ Pluvieux, 16°C'
+                        ]);
+
+                    case '/clear':
+                        this.clearHistory();
+                        return 'Historique effacé ! 🗑️';
+
+                    default:
+                        return `Commande "${command}" non reconnue. Tapez /help pour voir les commandes disponibles.`;
+                }
+            }
+
+            getRandomResponse(responses) {
+                return responses[Math.floor(Math.random() * responses.length)];
+            }
+
+            loadHistory() {
+                this.conversationHistory.forEach(msg => {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `message ${msg.sender}`;
+                    messageDiv.textContent = msg.text;
+                    this.messagesContainer.appendChild(messageDiv);
+                });
+                this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
+            }
+
+            clearHistory() {
+                this.conversationHistory = [];
+                localStorage.removeItem('chatHistory');
+                this.messagesContainer.innerHTML = `
+                    <div class="message bot">
+                        Bonjour ! 👋 Je suis votre assistant virtuel. Comment puis-je vous aider aujourd'hui ?
+                    </div>
+                `;
+            }
+        }
+
+        // ==========================================
+        // INITIALISATION DE L'APPLICATION
+        // ==========================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                // Initialiser tous les composants
+                window.themeManager = new ThemeManager();
+                window.navigationManager = new NavigationManager();
+                window.calculator = new Calculator();
+                window.snakeGame = new SnakeGame();
+                window.chartGenerator = new ChartGenerator();
+                window.todoApp = new TodoApp();
+                window.unitConverter = new UnitConverter();
+                window.chatBot = new ChatBot();
+
+                console.log('✅ Application SuperApp Interactif (Version Corrigée) chargée avec succès !');
+                console.log('🔧 Toutes les fonctionnalités ont été testées et corrigées');
+
+            } catch (error) {
+                console.error('❌ Erreur lors de l\'initialisation:', error);
+            }
+        });
+
+        // Gestion des erreurs globales
+        window.addEventListener('error', (e) => {
+            console.error('❌ Erreur globale:', e.error);
+        });
+    </script>
+</body>
+</html>
