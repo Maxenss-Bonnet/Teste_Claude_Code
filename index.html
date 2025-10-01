@@ -1,0 +1,1710 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SuperApp Interactif</title>
+    <style>
+        /* ==================== VARIABLES CSS POUR LES THÈMES ==================== */
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #ffffff;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent: #4a90e2;
+            --accent-hover: #357abd;
+            --border: #e0e0e0;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --success: #4caf50;
+            --danger: #f44336;
+            --warning: #ff9800;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --bg-card: #252525;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --accent: #64b5f6;
+            --accent-hover: #42a5f5;
+            --border: #404040;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --success: #66bb6a;
+            --danger: #ef5350;
+            --warning: #ffa726;
+        }
+
+        /* ==================== RESET ET BASE ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background 0.3s ease, color 0.3s ease;
+            line-height: 1.6;
+        }
+
+        /* ==================== HEADER ET NAVIGATION ==================== */
+        header {
+            background: var(--bg-card);
+            border-bottom: 2px solid var(--border);
+            box-shadow: 0 2px 10px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        nav {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 0.6rem 1.2rem;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            color: var(--text-primary);
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .nav-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        #themeToggle {
+            padding: 0.6rem 1rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        #themeToggle:hover {
+            background: var(--accent-hover);
+            transform: scale(1.1);
+        }
+
+        /* ==================== LAYOUT PRINCIPAL ==================== */
+        main {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==================== COMPOSANTS RÉUTILISABLES ==================== */
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px var(--shadow);
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+
+        .card h2 {
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        button {
+            padding: 0.7rem 1.5rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        input, select, textarea {
+            padding: 0.7rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        /* ==================== SECTION 1 : CALCULATRICE ==================== */
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        #calcDisplay {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            text-align: right;
+            font-size: 2rem;
+            border-radius: 8px;
+            border: 2px solid var(--border);
+            min-height: 80px;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+        }
+
+        .calc-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.8rem;
+        }
+
+        .calc-btn {
+            padding: 1.2rem;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .calc-btn.operator {
+            background: var(--accent);
+            color: white;
+        }
+
+        .calc-btn.function {
+            background: var(--warning);
+            color: white;
+        }
+
+        .calc-btn.clear {
+            background: var(--danger);
+            color: white;
+        }
+
+        #calcHistory {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 8px;
+            min-height: 200px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            padding: 0.5rem;
+            border-bottom: 1px solid var(--border);
+            font-family: 'Courier New', monospace;
+        }
+
+        /* ==================== SECTION 2 : SNAKE ==================== */
+        .snake-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        #snakeCanvas {
+            border: 3px solid var(--accent);
+            border-radius: 8px;
+            background: var(--bg-secondary);
+        }
+
+        .snake-controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .snake-info {
+            display: flex;
+            gap: 2rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        /* ==================== SECTION 3 : GRAPHIQUES ==================== */
+        .chart-container {
+            display: grid;
+            gap: 2rem;
+        }
+
+        #chartCanvas {
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            max-width: 100%;
+            background: white;
+        }
+
+        .chart-inputs {
+            display: grid;
+            gap: 1rem;
+        }
+
+        #chartData {
+            min-height: 150px;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+        }
+
+        .chart-controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* ==================== SECTION 4 : TODO LIST ==================== */
+        .todo-container {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .todo-input-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        #todoInput {
+            flex: 1;
+        }
+
+        .todo-filters {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        #todoList {
+            list-style: none;
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .todo-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .todo-item.completed {
+            opacity: 0.6;
+        }
+
+        .todo-item.completed .todo-text {
+            text-decoration: line-through;
+        }
+
+        .todo-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .todo-text {
+            flex: 1;
+            font-size: 1.1rem;
+        }
+
+        .delete-btn {
+            background: var(--danger);
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .todo-stats {
+            display: flex;
+            gap: 2rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        /* ==================== SECTION 5 : CONVERTISSEUR ==================== */
+        .converter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .converter-card {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 2px solid var(--border);
+        }
+
+        .converter-card h3 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .converter-inputs {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .converter-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .swap-btn {
+            background: var(--warning);
+            padding: 0.5rem 1rem;
+            font-size: 1.2rem;
+        }
+
+        .converter-result {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--accent);
+            color: white;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        /* ==================== SECTION 6 : CHATBOT ==================== */
+        .chat-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .chat-window {
+            height: 500px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 1rem;
+            border-radius: 12px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: var(--accent);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.bot {
+            align-self: flex-start;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-bottom-left-radius: 4px;
+        }
+
+        .message-time {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-top: 0.3rem;
+        }
+
+        .chat-input-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        #chatInput {
+            flex: 1;
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            nav {
+                justify-content: center;
+            }
+
+            .calc-buttons {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 0.5rem;
+            }
+
+            .calc-btn {
+                padding: 1rem;
+                font-size: 1rem;
+            }
+
+            .converter-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .todo-input-group {
+                flex-direction: column;
+            }
+
+            main {
+                padding: 0 1rem;
+            }
+        }
+
+        /* ==================== SCROLLBAR ==================== */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-hover);
+        }
+    </style>
+</head>
+<body>
+    <!-- ==================== HEADER ==================== -->
+    <header>
+        <div class="header-content">
+            <h1>🚀 SuperApp Interactif</h1>
+            <nav>
+                <button class="nav-btn active" data-section="calculator">🧮 Calculatrice</button>
+                <button class="nav-btn" data-section="snake">🐍 Snake</button>
+                <button class="nav-btn" data-section="chart">📊 Graphiques</button>
+                <button class="nav-btn" data-section="todo">✅ To-Do</button>
+                <button class="nav-btn" data-section="converter">🔄 Convertisseur</button>
+                <button class="nav-btn" data-section="chat">💬 ChatBot</button>
+            </nav>
+            <button id="themeToggle">🌙</button>
+        </div>
+    </header>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main>
+        <!-- SECTION 1 : CALCULATRICE SCIENTIFIQUE -->
+        <section id="calculator" class="section active">
+            <div class="card">
+                <h2>🧮 Calculatrice Scientifique</h2>
+                <div class="calculator-container">
+                    <div id="calcDisplay">0</div>
+                    <div class="calc-buttons">
+                        <button class="calc-btn clear" data-calc="C">C</button>
+                        <button class="calc-btn clear" data-calc="CE">CE</button>
+                        <button class="calc-btn function" data-calc="√">√</button>
+                        <button class="calc-btn function" data-calc="x²">x²</button>
+
+                        <button class="calc-btn" data-calc="7">7</button>
+                        <button class="calc-btn" data-calc="8">8</button>
+                        <button class="calc-btn" data-calc="9">9</button>
+                        <button class="calc-btn operator" data-calc="/">÷</button>
+
+                        <button class="calc-btn" data-calc="4">4</button>
+                        <button class="calc-btn" data-calc="5">5</button>
+                        <button class="calc-btn" data-calc="6">6</button>
+                        <button class="calc-btn operator" data-calc="*">×</button>
+
+                        <button class="calc-btn" data-calc="1">1</button>
+                        <button class="calc-btn" data-calc="2">2</button>
+                        <button class="calc-btn" data-calc="3">3</button>
+                        <button class="calc-btn operator" data-calc="-">−</button>
+
+                        <button class="calc-btn" data-calc="0">0</button>
+                        <button class="calc-btn" data-calc=".">.</button>
+                        <button class="calc-btn function" data-calc="1/x">1/x</button>
+                        <button class="calc-btn operator" data-calc="+">+</button>
+
+                        <button class="calc-btn operator" data-calc="=" style="grid-column: span 4;">=</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <h2>📜 Historique</h2>
+                <button id="clearHistory" style="background: var(--danger); margin-bottom: 1rem;">Effacer l'historique</button>
+                <div id="calcHistory"></div>
+            </div>
+        </section>
+
+        <!-- SECTION 2 : JEU SNAKE -->
+        <section id="snake" class="section">
+            <div class="card">
+                <h2>🐍 Jeu du Snake</h2>
+                <div class="snake-container">
+                    <div class="snake-info">
+                        <div>Score: <span id="snakeScore">0</span></div>
+                        <div>Meilleur: <span id="snakeHighScore">0</span></div>
+                    </div>
+                    <canvas id="snakeCanvas" width="400" height="400"></canvas>
+                    <div class="snake-controls">
+                        <button id="snakeStart">Démarrer</button>
+                        <button id="snakePause">Pause</button>
+                        <button id="snakeReset">Réinitialiser</button>
+                    </div>
+                    <p style="text-align: center; color: var(--text-secondary);">
+                        Utilisez les flèches ← ↑ → ↓ ou WASD pour contrôler le serpent
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3 : GÉNÉRATEUR DE GRAPHIQUES -->
+        <section id="chart" class="section">
+            <div class="card">
+                <h2>📊 Générateur de Graphiques</h2>
+                <div class="chart-container">
+                    <div class="chart-inputs">
+                        <div>
+                            <label for="chartTitle"><strong>Titre du graphique:</strong></label>
+                            <input type="text" id="chartTitle" placeholder="Mon graphique" value="Ventes mensuelles">
+                        </div>
+                        <div>
+                            <label for="chartData"><strong>Données (Label,Valeur par ligne):</strong></label>
+                            <textarea id="chartData" placeholder="Janvier,100&#10;Février,150&#10;Mars,120">Janvier,100
+Février,150
+Mars,120
+Avril,180
+Mai,200</textarea>
+                        </div>
+                        <div class="chart-controls">
+                            <select id="chartType">
+                                <option value="bar">Barres</option>
+                                <option value="line">Ligne</option>
+                                <option value="pie">Secteurs (Pie)</option>
+                            </select>
+                            <button id="generateChart">Générer</button>
+                            <button id="exportChart">Exporter PNG</button>
+                        </div>
+                    </div>
+                    <canvas id="chartCanvas" width="800" height="400"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4 : TODO LIST -->
+        <section id="todo" class="section">
+            <div class="card">
+                <h2>✅ To-Do List</h2>
+                <div class="todo-container">
+                    <div class="todo-input-group">
+                        <input type="text" id="todoInput" placeholder="Ajouter une nouvelle tâche...">
+                        <button id="addTodo">Ajouter</button>
+                    </div>
+                    <div class="todo-filters">
+                        <button class="filter-btn active" data-filter="all">Toutes</button>
+                        <button class="filter-btn" data-filter="active">Actives</button>
+                        <button class="filter-btn" data-filter="completed">Terminées</button>
+                    </div>
+                    <ul id="todoList"></ul>
+                    <div class="todo-stats">
+                        <div>Total: <span id="totalTasks">0</span></div>
+                        <div>Actives: <span id="activeTasks">0</span></div>
+                        <div>Terminées: <span id="completedTasks">0</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5 : CONVERTISSEUR D'UNITÉS -->
+        <section id="converter" class="section">
+            <div class="card">
+                <h2>🔄 Convertisseur d'Unités</h2>
+                <div class="converter-grid">
+                    <!-- Convertisseur de température -->
+                    <div class="converter-card">
+                        <h3>🌡️ Température</h3>
+                        <div class="converter-inputs">
+                            <input type="number" id="tempValue" placeholder="Valeur" value="0">
+                            <select id="tempFrom">
+                                <option value="celsius">Celsius</option>
+                                <option value="fahrenheit">Fahrenheit</option>
+                                <option value="kelvin">Kelvin</option>
+                            </select>
+                            <button class="swap-btn" onclick="swapUnits('temp')">⇅</button>
+                            <select id="tempTo">
+                                <option value="celsius">Celsius</option>
+                                <option value="fahrenheit" selected>Fahrenheit</option>
+                                <option value="kelvin">Kelvin</option>
+                            </select>
+                            <div id="tempResult" class="converter-result">32 °F</div>
+                        </div>
+                    </div>
+
+                    <!-- Convertisseur de longueur -->
+                    <div class="converter-card">
+                        <h3>📏 Longueur</h3>
+                        <div class="converter-inputs">
+                            <input type="number" id="lengthValue" placeholder="Valeur" value="1">
+                            <select id="lengthFrom">
+                                <option value="meters" selected>Mètres</option>
+                                <option value="kilometers">Kilomètres</option>
+                                <option value="inches">Pouces</option>
+                                <option value="feet">Pieds</option>
+                            </select>
+                            <button class="swap-btn" onclick="swapUnits('length')">⇅</button>
+                            <select id="lengthTo">
+                                <option value="meters">Mètres</option>
+                                <option value="kilometers">Kilomètres</option>
+                                <option value="inches">Pouces</option>
+                                <option value="feet" selected>Pieds</option>
+                            </select>
+                            <div id="lengthResult" class="converter-result">3.28 pieds</div>
+                        </div>
+                    </div>
+
+                    <!-- Convertisseur de poids -->
+                    <div class="converter-card">
+                        <h3>⚖️ Poids</h3>
+                        <div class="converter-inputs">
+                            <input type="number" id="weightValue" placeholder="Valeur" value="1">
+                            <select id="weightFrom">
+                                <option value="kilograms" selected>Kilogrammes</option>
+                                <option value="grams">Grammes</option>
+                                <option value="pounds">Livres</option>
+                                <option value="ounces">Onces</option>
+                            </select>
+                            <button class="swap-btn" onclick="swapUnits('weight')">⇅</button>
+                            <select id="weightTo">
+                                <option value="kilograms">Kilogrammes</option>
+                                <option value="grams">Grammes</option>
+                                <option value="pounds" selected>Livres</option>
+                                <option value="ounces">Onces</option>
+                            </select>
+                            <div id="weightResult" class="converter-result">2.20 livres</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6 : CHATBOT -->
+        <section id="chat" class="section">
+            <div class="card">
+                <h2>💬 ChatBot Simulé</h2>
+                <div class="chat-container">
+                    <div id="chatWindow" class="chat-window">
+                        <div class="message bot">
+                            <div>👋 Bonjour ! Je suis votre assistant virtuel. Comment puis-je vous aider ?</div>
+                            <div class="message-time">Maintenant</div>
+                        </div>
+                    </div>
+                    <div class="chat-input-group">
+                        <input type="text" id="chatInput" placeholder="Tapez votre message...">
+                        <button id="chatSend">Envoyer</button>
+                    </div>
+                    <p style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem;">
+                        <strong>Commandes disponibles:</strong> /time (heure), /joke (blague), /clear (effacer)
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==================== JAVASCRIPT ==================== -->
+    <script>
+        'use strict';
+
+        // ==================== GESTION DU THÈME ====================
+        const themeToggle = document.getElementById('themeToggle');
+        const htmlElement = document.documentElement;
+
+        // Charger le thème depuis localStorage
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        htmlElement.setAttribute('data-theme', savedTheme);
+        themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+        });
+
+        // ==================== GESTION DE LA NAVIGATION ====================
+        const navButtons = document.querySelectorAll('.nav-btn');
+        const sections = document.querySelectorAll('.section');
+
+        navButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetSection = btn.getAttribute('data-section');
+
+                // Mettre à jour les boutons
+                navButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Mettre à jour les sections
+                sections.forEach(s => s.classList.remove('active'));
+                document.getElementById(targetSection).classList.add('active');
+            });
+        });
+
+        // ==================== SECTION 1 : CALCULATRICE ====================
+        const calcDisplay = document.getElementById('calcDisplay');
+        const calcButtons = document.querySelectorAll('[data-calc]');
+        const calcHistory = document.getElementById('calcHistory');
+        const clearHistoryBtn = document.getElementById('clearHistory');
+
+        let currentCalc = '0';
+        let previousCalc = null;
+        let operation = null;
+        let shouldResetDisplay = false;
+
+        // Charger l'historique
+        let calcHistoryData = JSON.parse(localStorage.getItem('calcHistory') || '[]');
+        updateCalcHistoryDisplay();
+
+        calcButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const value = btn.getAttribute('data-calc');
+                handleCalcInput(value);
+            });
+        });
+
+        function handleCalcInput(value) {
+            if (value >= '0' && value <= '9') {
+                if (shouldResetDisplay || currentCalc === '0') {
+                    currentCalc = value;
+                    shouldResetDisplay = false;
+                } else {
+                    currentCalc += value;
+                }
+            } else if (value === '.') {
+                if (shouldResetDisplay) {
+                    currentCalc = '0.';
+                    shouldResetDisplay = false;
+                } else if (!currentCalc.includes('.')) {
+                    currentCalc += '.';
+                }
+            } else if (['+', '-', '*', '/'].includes(value)) {
+                if (operation !== null && !shouldResetDisplay) {
+                    calculate();
+                }
+                previousCalc = parseFloat(currentCalc);
+                operation = value;
+                shouldResetDisplay = true;
+            } else if (value === '=') {
+                if (operation !== null && previousCalc !== null) {
+                    const expression = `${previousCalc} ${operation} ${currentCalc}`;
+                    calculate();
+                    addToHistory(`${expression} = ${currentCalc}`);
+                    operation = null;
+                    previousCalc = null;
+                }
+            } else if (value === 'C') {
+                currentCalc = '0';
+                previousCalc = null;
+                operation = null;
+                shouldResetDisplay = false;
+            } else if (value === 'CE') {
+                currentCalc = '0';
+                shouldResetDisplay = false;
+            } else if (value === '√') {
+                const num = parseFloat(currentCalc);
+                if (num >= 0) {
+                    const result = Math.sqrt(num);
+                    addToHistory(`√${num} = ${result}`);
+                    currentCalc = result.toString();
+                } else {
+                    currentCalc = 'Erreur';
+                }
+                shouldResetDisplay = true;
+            } else if (value === 'x²') {
+                const num = parseFloat(currentCalc);
+                const result = num * num;
+                addToHistory(`${num}² = ${result}`);
+                currentCalc = result.toString();
+                shouldResetDisplay = true;
+            } else if (value === '1/x') {
+                const num = parseFloat(currentCalc);
+                if (num !== 0) {
+                    const result = 1 / num;
+                    addToHistory(`1/${num} = ${result}`);
+                    currentCalc = result.toString();
+                } else {
+                    currentCalc = 'Erreur';
+                }
+                shouldResetDisplay = true;
+            }
+
+            calcDisplay.textContent = currentCalc;
+        }
+
+        function calculate() {
+            const prev = previousCalc;
+            const curr = parseFloat(currentCalc);
+            let result;
+
+            switch (operation) {
+                case '+': result = prev + curr; break;
+                case '-': result = prev - curr; break;
+                case '*': result = prev * curr; break;
+                case '/':
+                    if (curr === 0) {
+                        currentCalc = 'Erreur: division par zéro';
+                        calcDisplay.textContent = currentCalc;
+                        return;
+                    }
+                    result = prev / curr;
+                    break;
+            }
+
+            currentCalc = result.toString();
+            shouldResetDisplay = true;
+        }
+
+        function addToHistory(entry) {
+            calcHistoryData.unshift(entry);
+            if (calcHistoryData.length > 10) {
+                calcHistoryData.pop();
+            }
+            localStorage.setItem('calcHistory', JSON.stringify(calcHistoryData));
+            updateCalcHistoryDisplay();
+        }
+
+        function updateCalcHistoryDisplay() {
+            calcHistory.innerHTML = calcHistoryData.length === 0
+                ? '<div style="text-align: center; opacity: 0.5;">Aucun historique</div>'
+                : calcHistoryData.map(entry => `<div class="history-item">${entry}</div>`).join('');
+        }
+
+        clearHistoryBtn.addEventListener('click', () => {
+            calcHistoryData = [];
+            localStorage.removeItem('calcHistory');
+            updateCalcHistoryDisplay();
+        });
+
+        // ==================== SECTION 2 : JEU SNAKE ====================
+        const snakeCanvas = document.getElementById('snakeCanvas');
+        const snakeCtx = snakeCanvas.getContext('2d');
+        const snakeStartBtn = document.getElementById('snakeStart');
+        const snakePauseBtn = document.getElementById('snakePause');
+        const snakeResetBtn = document.getElementById('snakeReset');
+        const snakeScoreEl = document.getElementById('snakeScore');
+        const snakeHighScoreEl = document.getElementById('snakeHighScore');
+
+        const gridSize = 20;
+        const tileCount = snakeCanvas.width / gridSize;
+
+        let snake = [{x: 10, y: 10}];
+        let snakeVelocity = {x: 0, y: 0};
+        let food = {x: 15, y: 15};
+        let snakeScore = 0;
+        let snakeHighScore = parseInt(localStorage.getItem('snakeHighScore') || '0');
+        let snakeGameRunning = false;
+        let snakeGamePaused = false;
+        let snakeGameLoop = null;
+
+        snakeHighScoreEl.textContent = snakeHighScore;
+
+        function drawSnakeGame() {
+            // Fond
+            snakeCtx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--bg-secondary');
+            snakeCtx.fillRect(0, 0, snakeCanvas.width, snakeCanvas.height);
+
+            // Grille
+            snakeCtx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--border');
+            snakeCtx.lineWidth = 0.5;
+            for (let i = 0; i <= tileCount; i++) {
+                snakeCtx.beginPath();
+                snakeCtx.moveTo(i * gridSize, 0);
+                snakeCtx.lineTo(i * gridSize, snakeCanvas.height);
+                snakeCtx.stroke();
+                snakeCtx.beginPath();
+                snakeCtx.moveTo(0, i * gridSize);
+                snakeCtx.lineTo(snakeCanvas.width, i * gridSize);
+                snakeCtx.stroke();
+            }
+
+            // Nourriture
+            snakeCtx.fillStyle = '#f44336';
+            snakeCtx.fillRect(food.x * gridSize, food.y * gridSize, gridSize - 2, gridSize - 2);
+
+            // Serpent
+            snake.forEach((segment, index) => {
+                snakeCtx.fillStyle = index === 0 ? '#4caf50' : '#66bb6a';
+                snakeCtx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 2, gridSize - 2);
+            });
+        }
+
+        function updateSnakeGame() {
+            if (!snakeGameRunning || snakeGamePaused) return;
+
+            // Déplacer le serpent
+            const head = {x: snake[0].x + snakeVelocity.x, y: snake[0].y + snakeVelocity.y};
+
+            // Vérifier les collisions avec les murs
+            if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount) {
+                gameOver();
+                return;
+            }
+
+            // Vérifier les collisions avec le corps
+            if (snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+                gameOver();
+                return;
+            }
+
+            snake.unshift(head);
+
+            // Vérifier si la nourriture est mangée
+            if (head.x === food.x && head.y === food.y) {
+                snakeScore++;
+                snakeScoreEl.textContent = snakeScore;
+                if (snakeScore > snakeHighScore) {
+                    snakeHighScore = snakeScore;
+                    localStorage.setItem('snakeHighScore', snakeHighScore);
+                    snakeHighScoreEl.textContent = snakeHighScore;
+                }
+                placeFood();
+            } else {
+                snake.pop();
+            }
+
+            drawSnakeGame();
+        }
+
+        function placeFood() {
+            food = {
+                x: Math.floor(Math.random() * tileCount),
+                y: Math.floor(Math.random() * tileCount)
+            };
+            // Vérifier que la nourriture n'est pas sur le serpent
+            if (snake.some(segment => segment.x === food.x && segment.y === food.y)) {
+                placeFood();
+            }
+        }
+
+        function gameOver() {
+            snakeGameRunning = false;
+            clearInterval(snakeGameLoop);
+            snakeCtx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+            snakeCtx.fillRect(0, 0, snakeCanvas.width, snakeCanvas.height);
+            snakeCtx.fillStyle = 'white';
+            snakeCtx.font = '30px Arial';
+            snakeCtx.textAlign = 'center';
+            snakeCtx.fillText('GAME OVER', snakeCanvas.width / 2, snakeCanvas.height / 2);
+        }
+
+        snakeStartBtn.addEventListener('click', () => {
+            if (!snakeGameRunning) {
+                snake = [{x: 10, y: 10}];
+                snakeVelocity = {x: 1, y: 0};
+                snakeScore = 0;
+                snakeScoreEl.textContent = snakeScore;
+                snakeGameRunning = true;
+                snakeGamePaused = false;
+                placeFood();
+                snakeGameLoop = setInterval(updateSnakeGame, 100);
+            } else if (snakeGamePaused) {
+                snakeGamePaused = false;
+            }
+        });
+
+        snakePauseBtn.addEventListener('click', () => {
+            if (snakeGameRunning) {
+                snakeGamePaused = !snakeGamePaused;
+                snakePauseBtn.textContent = snakeGamePaused ? 'Reprendre' : 'Pause';
+            }
+        });
+
+        snakeResetBtn.addEventListener('click', () => {
+            snakeGameRunning = false;
+            snakeGamePaused = false;
+            clearInterval(snakeGameLoop);
+            snake = [{x: 10, y: 10}];
+            snakeVelocity = {x: 0, y: 0};
+            snakeScore = 0;
+            snakeScoreEl.textContent = snakeScore;
+            snakePauseBtn.textContent = 'Pause';
+            drawSnakeGame();
+        });
+
+        // Contrôles clavier
+        document.addEventListener('keydown', (e) => {
+            if (!snakeGameRunning || snakeGamePaused) return;
+
+            switch(e.key) {
+                case 'ArrowUp':
+                case 'w':
+                case 'W':
+                    if (snakeVelocity.y === 0) snakeVelocity = {x: 0, y: -1};
+                    break;
+                case 'ArrowDown':
+                case 's':
+                case 'S':
+                    if (snakeVelocity.y === 0) snakeVelocity = {x: 0, y: 1};
+                    break;
+                case 'ArrowLeft':
+                case 'a':
+                case 'A':
+                    if (snakeVelocity.x === 0) snakeVelocity = {x: -1, y: 0};
+                    break;
+                case 'ArrowRight':
+                case 'd':
+                case 'D':
+                    if (snakeVelocity.x === 0) snakeVelocity = {x: 1, y: 0};
+                    break;
+            }
+        });
+
+        // Dessiner l'état initial
+        drawSnakeGame();
+
+        // ==================== SECTION 3 : GÉNÉRATEUR DE GRAPHIQUES ====================
+        const chartCanvas = document.getElementById('chartCanvas');
+        const chartCtx = chartCanvas.getContext('2d');
+        const chartTitle = document.getElementById('chartTitle');
+        const chartData = document.getElementById('chartData');
+        const chartType = document.getElementById('chartType');
+        const generateChartBtn = document.getElementById('generateChart');
+        const exportChartBtn = document.getElementById('exportChart');
+
+        function parseChartData() {
+            const lines = chartData.value.trim().split('\n');
+            const data = [];
+            for (const line of lines) {
+                const [label, value] = line.split(',').map(s => s.trim());
+                if (label && value && !isNaN(value)) {
+                    data.push({label, value: parseFloat(value)});
+                }
+            }
+            return data;
+        }
+
+        function drawBarChart(data, title) {
+            const width = chartCanvas.width;
+            const height = chartCanvas.height;
+            const padding = 60;
+            const chartWidth = width - 2 * padding;
+            const chartHeight = height - 2 * padding;
+
+            // Fond blanc
+            chartCtx.fillStyle = 'white';
+            chartCtx.fillRect(0, 0, width, height);
+
+            // Titre
+            chartCtx.fillStyle = '#333';
+            chartCtx.font = 'bold 20px Arial';
+            chartCtx.textAlign = 'center';
+            chartCtx.fillText(title, width / 2, 30);
+
+            // Trouver la valeur max
+            const maxValue = Math.max(...data.map(d => d.value));
+            const barWidth = chartWidth / data.length;
+
+            data.forEach((item, index) => {
+                const barHeight = (item.value / maxValue) * chartHeight;
+                const x = padding + index * barWidth;
+                const y = height - padding - barHeight;
+
+                // Dessiner la barre
+                chartCtx.fillStyle = '#4a90e2';
+                chartCtx.fillRect(x + 5, y, barWidth - 10, barHeight);
+
+                // Valeur
+                chartCtx.fillStyle = '#333';
+                chartCtx.font = '12px Arial';
+                chartCtx.textAlign = 'center';
+                chartCtx.fillText(item.value, x + barWidth / 2, y - 5);
+
+                // Label
+                chartCtx.save();
+                chartCtx.translate(x + barWidth / 2, height - padding + 20);
+                chartCtx.rotate(-Math.PI / 4);
+                chartCtx.textAlign = 'right';
+                chartCtx.fillText(item.label, 0, 0);
+                chartCtx.restore();
+            });
+        }
+
+        function drawLineChart(data, title) {
+            const width = chartCanvas.width;
+            const height = chartCanvas.height;
+            const padding = 60;
+            const chartWidth = width - 2 * padding;
+            const chartHeight = height - 2 * padding;
+
+            // Fond blanc
+            chartCtx.fillStyle = 'white';
+            chartCtx.fillRect(0, 0, width, height);
+
+            // Titre
+            chartCtx.fillStyle = '#333';
+            chartCtx.font = 'bold 20px Arial';
+            chartCtx.textAlign = 'center';
+            chartCtx.fillText(title, width / 2, 30);
+
+            const maxValue = Math.max(...data.map(d => d.value));
+            const stepX = chartWidth / (data.length - 1);
+
+            // Dessiner la ligne
+            chartCtx.strokeStyle = '#4a90e2';
+            chartCtx.lineWidth = 3;
+            chartCtx.beginPath();
+
+            data.forEach((item, index) => {
+                const x = padding + index * stepX;
+                const y = height - padding - (item.value / maxValue) * chartHeight;
+
+                if (index === 0) {
+                    chartCtx.moveTo(x, y);
+                } else {
+                    chartCtx.lineTo(x, y);
+                }
+
+                // Points
+                chartCtx.fillStyle = '#4a90e2';
+                chartCtx.beginPath();
+                chartCtx.arc(x, y, 5, 0, Math.PI * 2);
+                chartCtx.fill();
+
+                // Valeur
+                chartCtx.fillStyle = '#333';
+                chartCtx.font = '12px Arial';
+                chartCtx.textAlign = 'center';
+                chartCtx.fillText(item.value, x, y - 10);
+
+                // Label
+                chartCtx.save();
+                chartCtx.translate(x, height - padding + 20);
+                chartCtx.rotate(-Math.PI / 4);
+                chartCtx.textAlign = 'right';
+                chartCtx.fillText(item.label, 0, 0);
+                chartCtx.restore();
+            });
+
+            chartCtx.stroke();
+        }
+
+        function drawPieChart(data, title) {
+            const width = chartCanvas.width;
+            const height = chartCanvas.height;
+            const centerX = width / 2;
+            const centerY = height / 2 + 20;
+            const radius = Math.min(width, height) / 3;
+
+            // Fond blanc
+            chartCtx.fillStyle = 'white';
+            chartCtx.fillRect(0, 0, width, height);
+
+            // Titre
+            chartCtx.fillStyle = '#333';
+            chartCtx.font = 'bold 20px Arial';
+            chartCtx.textAlign = 'center';
+            chartCtx.fillText(title, width / 2, 30);
+
+            const total = data.reduce((sum, item) => sum + item.value, 0);
+            const colors = ['#4a90e2', '#f44336', '#4caf50', '#ff9800', '#9c27b0', '#00bcd4', '#ffeb3b', '#795548'];
+
+            let currentAngle = -Math.PI / 2;
+
+            data.forEach((item, index) => {
+                const sliceAngle = (item.value / total) * Math.PI * 2;
+
+                // Dessiner la portion
+                chartCtx.fillStyle = colors[index % colors.length];
+                chartCtx.beginPath();
+                chartCtx.moveTo(centerX, centerY);
+                chartCtx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
+                chartCtx.closePath();
+                chartCtx.fill();
+
+                // Label
+                const labelAngle = currentAngle + sliceAngle / 2;
+                const labelX = centerX + Math.cos(labelAngle) * (radius * 0.7);
+                const labelY = centerY + Math.sin(labelAngle) * (radius * 0.7);
+
+                chartCtx.fillStyle = 'white';
+                chartCtx.font = 'bold 14px Arial';
+                chartCtx.textAlign = 'center';
+                chartCtx.textBaseline = 'middle';
+                chartCtx.fillText(`${item.value}`, labelX, labelY);
+
+                currentAngle += sliceAngle;
+            });
+
+            // Légende
+            const legendX = 20;
+            let legendY = height / 2 - (data.length * 25) / 2;
+
+            data.forEach((item, index) => {
+                chartCtx.fillStyle = colors[index % colors.length];
+                chartCtx.fillRect(legendX, legendY, 20, 20);
+
+                chartCtx.fillStyle = '#333';
+                chartCtx.font = '14px Arial';
+                chartCtx.textAlign = 'left';
+                chartCtx.fillText(item.label, legendX + 30, legendY + 15);
+
+                legendY += 25;
+            });
+        }
+
+        generateChartBtn.addEventListener('click', () => {
+            const data = parseChartData();
+            if (data.length === 0) {
+                alert('Veuillez entrer des données valides au format Label,Valeur');
+                return;
+            }
+
+            const title = chartTitle.value || 'Graphique';
+            const type = chartType.value;
+
+            switch(type) {
+                case 'bar':
+                    drawBarChart(data, title);
+                    break;
+                case 'line':
+                    drawLineChart(data, title);
+                    break;
+                case 'pie':
+                    drawPieChart(data, title);
+                    break;
+            }
+        });
+
+        exportChartBtn.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.download = 'graphique.png';
+            link.href = chartCanvas.toDataURL();
+            link.click();
+        });
+
+        // Générer le graphique initial
+        generateChartBtn.click();
+
+        // ==================== SECTION 4 : TODO LIST ====================
+        const todoInput = document.getElementById('todoInput');
+        const addTodoBtn = document.getElementById('addTodo');
+        const todoList = document.getElementById('todoList');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const totalTasksEl = document.getElementById('totalTasks');
+        const activeTasksEl = document.getElementById('activeTasks');
+        const completedTasksEl = document.getElementById('completedTasks');
+
+        let todos = JSON.parse(localStorage.getItem('todos') || '[]');
+        let currentFilter = 'all';
+
+        function saveTodos() {
+            localStorage.setItem('todos', JSON.stringify(todos));
+        }
+
+        function renderTodos() {
+            const filteredTodos = todos.filter(todo => {
+                if (currentFilter === 'active') return !todo.completed;
+                if (currentFilter === 'completed') return todo.completed;
+                return true;
+            });
+
+            todoList.innerHTML = filteredTodos.map(todo => `
+                <li class="todo-item ${todo.completed ? 'completed' : ''}">
+                    <input type="checkbox" class="todo-checkbox" ${todo.completed ? 'checked' : ''}
+                           onchange="toggleTodo('${todo.id}')">
+                    <span class="todo-text">${todo.text}</span>
+                    <button class="delete-btn" onclick="deleteTodo('${todo.id}')">Supprimer</button>
+                </li>
+            `).join('');
+
+            updateStats();
+        }
+
+        function updateStats() {
+            totalTasksEl.textContent = todos.length;
+            activeTasksEl.textContent = todos.filter(t => !t.completed).length;
+            completedTasksEl.textContent = todos.filter(t => t.completed).length;
+        }
+
+        function addTodo() {
+            const text = todoInput.value.trim();
+            if (text === '') return;
+
+            todos.push({
+                id: Date.now().toString(),
+                text: text,
+                completed: false
+            });
+
+            todoInput.value = '';
+            saveTodos();
+            renderTodos();
+        }
+
+        window.toggleTodo = function(id) {
+            const todo = todos.find(t => t.id === id);
+            if (todo) {
+                todo.completed = !todo.completed;
+                saveTodos();
+                renderTodos();
+            }
+        };
+
+        window.deleteTodo = function(id) {
+            todos = todos.filter(t => t.id !== id);
+            saveTodos();
+            renderTodos();
+        };
+
+        addTodoBtn.addEventListener('click', addTodo);
+        todoInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addTodo();
+        });
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.getAttribute('data-filter');
+                renderTodos();
+            });
+        });
+
+        renderTodos();
+
+        // ==================== SECTION 5 : CONVERTISSEUR D'UNITÉS ====================
+
+        // Fonctions de conversion
+        const tempConversions = {
+            celsius: {
+                fahrenheit: (c) => c * 9/5 + 32,
+                kelvin: (c) => c + 273.15,
+                celsius: (c) => c
+            },
+            fahrenheit: {
+                celsius: (f) => (f - 32) * 5/9,
+                kelvin: (f) => (f - 32) * 5/9 + 273.15,
+                fahrenheit: (f) => f
+            },
+            kelvin: {
+                celsius: (k) => k - 273.15,
+                fahrenheit: (k) => (k - 273.15) * 9/5 + 32,
+                kelvin: (k) => k
+            }
+        };
+
+        const lengthConversions = {
+            meters: {
+                kilometers: (m) => m / 1000,
+                inches: (m) => m * 39.3701,
+                feet: (m) => m * 3.28084,
+                meters: (m) => m
+            },
+            kilometers: {
+                meters: (km) => km * 1000,
+                inches: (km) => km * 39370.1,
+                feet: (km) => km * 3280.84,
+                kilometers: (km) => km
+            },
+            inches: {
+                meters: (inch) => inch / 39.3701,
+                kilometers: (inch) => inch / 39370.1,
+                feet: (inch) => inch / 12,
+                inches: (inch) => inch
+            },
+            feet: {
+                meters: (ft) => ft / 3.28084,
+                kilometers: (ft) => ft / 3280.84,
+                inches: (ft) => ft * 12,
+                feet: (ft) => ft
+            }
+        };
+
+        const weightConversions = {
+            kilograms: {
+                grams: (kg) => kg * 1000,
+                pounds: (kg) => kg * 2.20462,
+                ounces: (kg) => kg * 35.274,
+                kilograms: (kg) => kg
+            },
+            grams: {
+                kilograms: (g) => g / 1000,
+                pounds: (g) => g / 453.592,
+                ounces: (g) => g / 28.3495,
+                grams: (g) => g
+            },
+            pounds: {
+                kilograms: (lb) => lb / 2.20462,
+                grams: (lb) => lb * 453.592,
+                ounces: (lb) => lb * 16,
+                pounds: (lb) => lb
+            },
+            ounces: {
+                kilograms: (oz) => oz / 35.274,
+                grams: (oz) => oz * 28.3495,
+                pounds: (oz) => oz / 16,
+                ounces: (oz) => oz
+            }
+        };
+
+        const unitSymbols = {
+            celsius: '°C',
+            fahrenheit: '°F',
+            kelvin: 'K',
+            meters: 'm',
+            kilometers: 'km',
+            inches: 'in',
+            feet: 'ft',
+            kilograms: 'kg',
+            grams: 'g',
+            pounds: 'lb',
+            ounces: 'oz'
+        };
+
+        function convertUnit(type, value, from, to) {
+            let conversions;
+            if (type === 'temp') conversions = tempConversions;
+            else if (type === 'length') conversions = lengthConversions;
+            else if (type === 'weight') conversions = weightConversions;
+
+            if (conversions && conversions[from] && conversions[from][to]) {
+                return conversions[from][to](value);
+            }
+            return value;
+        }
+
+        function updateConverter(type) {
+            const value = parseFloat(document.getElementById(`${type}Value`).value) || 0;
+            const from = document.getElementById(`${type}From`).value;
+            const to = document.getElementById(`${type}To`).value;
+            const resultEl = document.getElementById(`${type}Result`);
+
+            const result = convertUnit(type, value, from, to);
+            const toSymbol = unitSymbols[to];
+            resultEl.textContent = `${result.toFixed(2)} ${toSymbol}`;
+        }
+
+        window.swapUnits = function(type) {
+            const fromEl = document.getElementById(`${type}From`);
+            const toEl = document.getElementById(`${type}To`);
+            const temp = fromEl.value;
+            fromEl.value = toEl.value;
+            toEl.value = temp;
+            updateConverter(type);
+        };
+
+        // Ajouter les écouteurs d'événements pour chaque convertisseur
+        ['temp', 'length', 'weight'].forEach(type => {
+            document.getElementById(`${type}Value`).addEventListener('input', () => updateConverter(type));
+            document.getElementById(`${type}From`).addEventListener('change', () => updateConverter(type));
+            document.getElementById(`${type}To`).addEventListener('change', () => updateConverter(type));
+        });
+
+        // Initialiser les convertisseurs
+        updateConverter('temp');
+        updateConverter('length');
+        updateConverter('weight');
+
+        // ==================== SECTION 6 : CHATBOT ====================
+        const chatWindow = document.getElementById('chatWindow');
+        const chatInput = document.getElementById('chatInput');
+        const chatSendBtn = document.getElementById('chatSend');
+
+        let chatHistory = JSON.parse(localStorage.getItem('chatHistory') || '[]');
+
+        const jokes = [
+            "Pourquoi les plongeurs plongent-ils toujours en arrière et jamais en avant ? Parce que sinon ils tombent dans le bateau !",
+            "Qu'est-ce qu'un crocodile qui surveille la pharmacie ? Un Lacoste garde.",
+            "Comment appelle-t-on un chat tombé dans un pot de peinture le jour de Noël ? Un chat-peint de Noël !",
+            "Pourquoi les poissons n'aiment pas jouer au tennis ? Parce qu'ils ont peur du filet !",
+            "Qu'est-ce qu'un canif ? Un petit fien.",
+        ];
+
+        const responses = {
+            'bonjour': "Bonjour ! Comment puis-je vous aider aujourd'hui ?",
+            'salut': "Salut ! Que puis-je faire pour vous ?",
+            'hello': "Hello ! Comment allez-vous ?",
+            'aide': "Je peux vous aider avec diverses commandes : /time pour l'heure, /joke pour une blague, /clear pour effacer l'historique.",
+            'help': "Je peux vous aider avec diverses commandes : /time pour l'heure, /joke pour une blague, /clear pour effacer l'historique.",
+            'merci': "De rien ! N'hésitez pas si vous avez d'autres questions.",
+            'thank': "You're welcome!",
+            'au revoir': "Au revoir ! À bientôt !",
+            'bye': "Goodbye! See you soon!",
+        };
+
+        function getTimeString() {
+            const now = new Date();
+            return now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function addMessage(text, isUser) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+            messageDiv.innerHTML = `
+                <div>${text}</div>
+                <div class="message-time">${getTimeString()}</div>
+            `;
+            chatWindow.appendChild(messageDiv);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+
+            // Sauvegarder dans l'historique
+            chatHistory.push({ text, isUser, time: getTimeString() });
+            localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+        }
+
+        function getBotResponse(userMessage) {
+            const message = userMessage.toLowerCase().trim();
+
+            // Commandes
+            if (message === '/time') {
+                return `Il est actuellement ${new Date().toLocaleString('fr-FR')}`;
+            }
+            if (message === '/joke') {
+                return jokes[Math.floor(Math.random() * jokes.length)];
+            }
+            if (message === '/clear') {
+                chatHistory = [];
+                localStorage.removeItem('chatHistory');
+                chatWindow.innerHTML = '<div class="message bot"><div>👋 Historique effacé ! Comment puis-je vous aider ?</div><div class="message-time">Maintenant</div></div>';
+                return null;
+            }
+
+            // Réponses par mots-clés
+            for (const [keyword, response] of Object.entries(responses)) {
+                if (message.includes(keyword)) {
+                    return response;
+                }
+            }
+
+            // Réponse par défaut
+            const defaultResponses = [
+                "C'est intéressant ! Pouvez-vous m'en dire plus ?",
+                "Je comprends. Comment puis-je vous aider davantage ?",
+                "Hmm, laissez-moi réfléchir... Pouvez-vous reformuler ?",
+                "Désolé, je ne suis pas sûr de comprendre. Essayez les commandes /time, /joke ou /clear.",
+            ];
+            return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
+        }
+
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if (message === '') return;
+
+            addMessage(message, true);
+            chatInput.value = '';
+
+            // Simuler un délai de réponse
+            setTimeout(() => {
+                const response = getBotResponse(message);
+                if (response) {
+                    addMessage(response, false);
+                }
+            }, 1000 + Math.random() * 1000);
+        }
+
+        chatSendBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        // Restaurer l'historique au chargement
+        chatHistory.forEach(msg => {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${msg.isUser ? 'user' : 'bot'}`;
+            messageDiv.innerHTML = `
+                <div>${msg.text}</div>
+                <div class="message-time">${msg.time}</div>
+            `;
+            chatWindow.appendChild(messageDiv);
+        });
+
+        if (chatHistory.length > 0) {
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+    </script>
+</body>
+</html>
